@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSW2vaNGY9ceZ1axaa
 startedAt: 2026-11-28T07:33:02Z
-endedAt: 2026-11-28T07:42:58Z
+endedAt: 2026-11-28T07:46:05Z
 kind: autonomous
 goal: Weekly sync of the Glass Box textbook with the code
-status: in-review
-outcome: "PR 3740 open: 84 pages re-pinned, 26 flagged pages and 5 rotation pages claim-checked, no false claims"
-summary: "Scheduled glassbox-update run (agent-initiated by the schedule; no human prompt). Pinned all 84 guide pages to main at afd8b877, flagged 26 pages whose cited files changed (pr-workflow condense, guards.md crash list, ADR-0004 pointer, prune-trials, clear-backlog, page-checks), had five sonnet subagents claim-check them (scoped for flagged pages, full for the five oldest-checked rotation pages): no page states a claim its source contradicts, so no prose changed. A Scout subagent found no new topic (it read commit stats, not full diffs), and no lesson is over the soft word limit. update.yml dated for the rotation pages. code-review and gate:scoped were clean; PR 3740 opened with a verdict comment and subscribed. Open: merge once CI is green."
+status: completed
+outcome: "PR 3740 merged: 84 pages re-pinned, 26 flagged and 5 rotation pages claim-checked, no false claims"
+summary: "Scheduled glassbox-update run (agent-initiated by the schedule; no human prompt). Pinned all 84 guide pages to main at afd8b877, flagged 26 pages whose cited files changed (pr-workflow condense, guards.md crash list, ADR-0004 pointer, prune-trials, clear-backlog, page-checks), had five sonnet subagents claim-check them (scoped for flagged pages, full for the five oldest-checked rotation pages): no page states a claim its source contradicts, so no prose changed. A Scout subagent found no new topic (it read commit stats, not full diffs), and no lesson is over the soft word limit. update.yml dated for the rotation pages. code-review and gate:scoped were clean; PR 3740 opened with a verdict comment and subscribed. PR 3740 merged after a green gate."
 prs:
   - "3740"
 docsRead:
@@ -72,18 +72,21 @@ frictions:
   - description: First code-review call omitted the head sha the guard demands; the Skill text and the update skill do not mention it, only verdict-line --review-call does.
     solution: Run verdict-line.ts --review-call before invoking code-review, as pr-workflow step 3 says.
     severity: nit
-durationSec: 595
+durationSec: 783
 models:
-  claude-sonnet-5-5: 103
+  claude-sonnet-5-5: 121
 toolCounts:
-  Bash: 33
+  Bash: 37
   Read: 3
   Agent: 9
   Skill: 4
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__create_pull_request: 1
   mcp__github__add_issue_comment: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 3
+  mcp__github__pull_request_read: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/workshop/checks/update.yml
   - layers/glassbox/content/guide/pages/agents/10.subagents.md
@@ -438,56 +441,56 @@ subagents:
     durationSec: 18
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 6.1
+    tokenShare: 5.5
   - type: general-purpose
     task: Claim check hooks pages
     model: sonnet
     durationSec: 131
     toolCalls: 23
     modelCalls: 18
-    tokenShare: 11
+    tokenShare: 9.9
   - type: general-purpose
     task: Claim check PR/gate pages
     model: sonnet
     durationSec: 65
     toolCalls: 13
     modelCalls: 10
-    tokenShare: 5.5
+    tokenShare: 4.9
   - type: general-purpose
     task: Claim check practice pages
     model: sonnet
     durationSec: 64
     toolCalls: 12
     modelCalls: 10
-    tokenShare: 5.1
+    tokenShare: 4.6
   - type: general-purpose
     task: Claim check self-improvement pages
     model: sonnet
     durationSec: 90
     toolCalls: 15
     modelCalls: 11
-    tokenShare: 6.8
+    tokenShare: 6.2
   - type: general-purpose
     task: Full claim check rotation pages
     model: sonnet
     durationSec: 187
     toolCalls: 36
     modelCalls: 26
-    tokenShare: 16.4
+    tokenShare: 14.9
   - type: general-purpose
     task: Review standards axis
     model: sonnet
     durationSec: 18
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 3.3
+    tokenShare: 3
   - type: general-purpose
     task: Review spec axis
     model: sonnet
     durationSec: 30
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 3.8
+    tokenShare: 3.4
 gitBranch: claude/relaxed-einstein-qh83sv
 entrypoint: remote_trigger
 cliVersion: 2.1.332
