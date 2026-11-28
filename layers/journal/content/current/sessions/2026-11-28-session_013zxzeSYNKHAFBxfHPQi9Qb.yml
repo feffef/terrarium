@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_013zxzeSYNKHAFBxfHPQi9Qb
 startedAt: 2026-11-28T08:45:38Z
-endedAt: 2026-11-28T09:07:37Z
+endedAt: 2026-11-28T09:15:41Z
 kind: autonomous
 goal: "Glass Box curate run: new Responsive layout lesson"
 status: in-review
-outcome: "One run: a new Web standards lesson on responsive layout is in PR 3743, waiting for the owner's merge"
+outcome: "Two runs: a new Responsive layout lesson in PR 3743 (waits for the owner) and a Usability testing wording fix in PR 3744"
 summary: "A scheduled glassbox-curate Loop session (agent-initiated; no human prompt). Step 1 read the guide index and the memory page. No open PR touched Glass Box and no gap item was left, so I took the owner's third direction (fill what no page teaches) and picked responsive layout after grepping the tenants' CSS for media queries, clamp(), auto-fit and container queries. An opus writer wrote the lesson with sources; a sonnet claim checker found two false or overstated sentences (Blog cards 'names only', the front-door panel under 30rem only from 60rem up), both fixed; two fresh readers led to glosses. Three Where next lists gained the lesson. The code-review reviewers found pagesRead incomplete, which I fixed by reading the pages. Gate passed; PR 3743 opened and subscribed. Only one run was done: the new Lesson waits for the owner, and I stopped to let the PR's checks come in rather than start another run."
 prs:
   - "3743"
+  - "3744"
 docsRead:
   - path: layers/glassbox/GLOSSARY.md
     reason: (no reason given)
@@ -42,11 +43,19 @@ docsRead:
     reason: (no reason given)
   - path: layers/glassbox/content/guide/pages/nuxt-content/60.mermaid-pre-rendering.md
     reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/verification/85.usability-testing.md
+    reason: (read before editing)
   - path: layers/glassbox/content/guide/pages/web-standards/15.responsive-layout.md
     reason: (read before editing)
   - path: .agents/skills/glassbox-lesson/SKILL.md
     reason: (no reason given)
   - path: .agents/skills/glassbox-curate/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/visitor-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/decisions.md
     reason: (no reason given)
 skillsUsed:
   - name: dispatch-subagents
@@ -72,26 +81,28 @@ frictions:
   - description: The run entry's pagesRead missed four pages the change touched or overlapped; the Spec and Standards reviewers caught it, not me.
     solution: List pages the Where next swaps remove and the overlapping draft when writing pagesRead.
     severity: minor
-durationSec: 1319
+durationSec: 1803
 models:
-  claude-sonnet-5-5: 126
+  claude-sonnet-5-5: 176
 toolCounts:
   Read: 21
-  Skill: 5
-  Bash: 39
-  Agent: 7
+  Skill: 6
+  Bash: 53
+  Agent: 12
   ToolSearch: 1
   mcp__github__list_pull_requests: 1
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  ReadNotifications: 3
 filesEdited:
+  - layers/glassbox/content/guide/pages/verification/85.usability-testing.md
   - layers/glassbox/content/guide/pages/web-standards/15.responsive-layout.md
   - layers/glassbox/content/workshop/runs/2026-11-28T0907.yml
+  - layers/glassbox/content/workshop/pages/index.md
   - layers/glassbox/content/workshop/runs/2026-11-28T0846.yml
   - layers/glassbox/content/guide/pages/verification/80.headless-browser-checks.md
   - layers/glassbox/content/guide/pages/web-standards/40.colour-and-motion-settings.md
   - layers/glassbox/content/guide/pages/web-standards/55.minimum-target-size.md
-  - layers/glassbox/content/workshop/pages/index.md
   - layers/glassbox/content/guide/terms/breakpoint.yml
   - layers/glassbox/content/guide/terms/viewport.yml
 rulesGlobal:
@@ -101,6 +112,9 @@ rulesGlobal:
   - .claude/rules/adr-0017.md
 docsReadBySubagents:
   - .agents/skills/glassbox-curate/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/visitor-loop/visitor-brief.md
+  - .agents/skills/visitor-loop/decisions.md
 ruleUse:
   - by: main
     answered: true
@@ -326,47 +340,185 @@ ruleUse:
       - rule: .claude/rules/adr-0017.md
         via: start
     reported: []
+  - by: general-purpose
+    subagent: 7
+    answered: false
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/verification/85.usability-testing.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/writing-pages.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/writing-pages.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: .claude/rules/glassbox-content.md
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/glassbox-content.md
+        via: read
+    reported: []
+  - by: general-purpose
+    subagent: 8
+    answered: false
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported: []
+  - by: general-purpose
+    subagent: 9
+    answered: false
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported: []
+  - by: general-purpose
+    subagent: 10
+    answered: false
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/writing-pages.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/glassbox-lesson/writing-pages.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/adr-0028.md
+        via: hint
+      - rule: .claude/rules/glassbox-content.md
+        via: hint
+    reported: []
+  - by: general-purpose
+    subagent: 11
+    answered: false
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+    reported: []
 subagents:
   - task: Write Responsive layout lesson
     model: opus
     durationSec: 492
     toolCalls: 64
     modelCalls: 55
-    tokenShare: 21.9
+    tokenShare: 14.5
   - task: Claim-check responsive layout page
     model: sonnet
     durationSec: 143
     toolCalls: 22
     modelCalls: 14
-    tokenShare: 5.7
+    tokenShare: 3.8
   - task: Fresh reader of responsive layout
     model: sonnet
     durationSec: 41
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 1.8
+    tokenShare: 1.2
   - task: Fresh re-read of responsive layout
     model: sonnet
     durationSec: 11
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 1
+    tokenShare: 0.7
   - task: Standards review of lesson diff
     model: sonnet
     durationSec: 44
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 2.5
+    tokenShare: 1.6
   - task: Spec review of lesson diff
     model: sonnet
     durationSec: 57
     toolCalls: 11
     modelCalls: 11
-    tokenShare: 3.7
+    tokenShare: 2.4
   - task: Fresh reader of usability testing
     model: sonnet
-    durationSec: 0
-    toolCalls: 0
+    durationSec: 11
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.6
+  - task: Fix usability testing wording
+    model: opus
+    durationSec: 87
+    toolCalls: 16
+    modelCalls: 6
+    tokenShare: 2.4
+  - task: Claim-check usability wording edits
+    model: sonnet
+    durationSec: 30
+    toolCalls: 3
+    modelCalls: 3
+    tokenShare: 1
+  - task: Fresh re-read of usability testing
+    model: sonnet
+    durationSec: 9
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.6
+  - task: Standards review of wording diff
+    model: sonnet
+    durationSec: 27
+    toolCalls: 7
+    modelCalls: 6
+    tokenShare: 1.4
+  - task: Spec review of wording diff
+    model: sonnet
+    durationSec: 22
+    toolCalls: 5
+    modelCalls: 5
+    tokenShare: 1.2
 gitBranch: claude/compassionate-bardeen-r5f6v7
 entrypoint: remote_trigger
 cliVersion: 2.1.332
