@@ -49,7 +49,7 @@ follow it and don't route around it. If it is wrong, say so on the guard's issue
 
 ## Conventions every guard follows
 
-- **A crash.** A crashing hint, `deferred-tool-guard`, `harness-tag-stop`, `merge-close-stop`, `pr-subscribe-stop` or `tenant-glossary-guard`
+- **A crash.** A crashing hint, recorder, SessionStart hook, `deferred-tool-guard`, `harness-tag-stop`, `merge-close-stop`, `pr-subscribe-stop`, `subagent-rule-use-stop` or `tenant-glossary-guard`
   lets the action go ahead (each uses a bare `|| true`). Any other guard that crashes or can't read
   its context or payload blocks it: its hook entry sets `"onFailure": "block"`,
   which also blocks when the hook can't start or times out (#2073). That needs
