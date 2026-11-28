@@ -91,8 +91,8 @@ observations:
       session_013zxzeSJY7CjGgJdwhJmTgV (11-26) and
       session_013zxzeP4F3aYSUT97sA7pou (11-27). The first two ran before
       fef027a5d (11-26 21:37Z, digest replaces evidence); 11-27 is the first run
-      on the digest text and after 2dc4441d7 (simplifying required for workflow
-      clusters only). I read the logs' opening sections (11-27 in full) but not
+      on the digest text; the simplifying-for-workflow-clusters wording is from
+      3d1e92af5 (11-26) and c18d36ec0 only rewrapped it. I read the logs' opening sections (11-27 in full) but not
       the 11-25 and 11-26 rulesUse sections. Watch for 1, stop reason: failed.
       On 11-27 the log says it stopped after 8 clusters, "because the digest and
       code checks used up the run budget", which is neither quota nor 30
