@@ -94,7 +94,8 @@ trials:
       issue titles (not read: bodies, `guards.md` beyond its roster); it ranked
       the subagent-brief rules by largest prose mass among those with failures.
       Its counts are unverified here, so none are cited. `trial-territory.ts` run
-      this run: no overlap. Sonnet probe pinned to 10841085bebc passed.
+      this run on the file path: no overlap. Sonnet probe pinned to 10841085bebc
+      passed; three original clauses were restored verbatim after it (96bdcd8).
     territory:
       paths:
         - ".agents/skills/dispatch-subagents/SKILL.md"
