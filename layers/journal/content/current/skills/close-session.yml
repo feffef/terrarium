@@ -9,25 +9,10 @@ role: >-
   the self-judged "invoke at closure" rule fire reliably; its invocation rate is the evidence for ADR-0009's choice
   of a Skill over a reminder hook.
 auditSummary:
-  date: "2026-11-27"
-  text: "Gets almost every session's log written and keeps unmerged work honest. One long session was closed only after the owner asked, the first such nudge in several audits; its look-back step still leaves no trace."
+  date: "2026-11-28"
+  text: "Lands a session log for every run, and all recent logs reached main. It is unreliable at re-closing after a merge: four sessions slipped and needed a hook reminder or the owner's prompt."
 
 observations:
-  - date: "2026-10-18"
-    note: >-
-      Self-check (audit-skills behaviour check), Part A (10 usedIn, all
-      2026-10-11, graded against the pre-10-12 SKILL.md text in force at
-      their startedAt): all 10 logs real, non-stub, correctly committed on
-      main, every claimed PR (#1762, #1766-1768, #1753, #1756-1758, #1760)
-      confirmed merged. No omitted frictions - several sessions honestly
-      self-log the "user had to ask if it was logged" failure this audit
-      looks for, including a genuine log-session mechanism bug (a container
-      resume rolling back two log updates, self-reported). Part B (1
-      notUsed, session_01NVG22rfEsjhW9zkcCco6W8): re-confirmed equivalent
-      closure (log present via log-session direct, no PR warranted per the
-      owner's own kickoff) - the 9th consecutive run reaching this verdict
-      on the same session id. No new finding. Grade/role unchanged
-      (essential).
   - date: "2026-10-19"
     note: >-
       Self-check (audit-skills behaviour check), 10/10 usedInLogs sessions
@@ -153,3 +138,41 @@ observations:
       into step 1. Next focus: transcript-level order of events (re-invocation
       after merge notifications) and full reads of the logs that were only
       field-checked.
+  - date: "2026-11-28"
+    note: >-
+      Behaviour check of 33 scheduled and interactive run logs from 11-25 to
+      11-28 plus the non-user session_013zxzeStkfKoZxBQUkQd9pd; the last
+      SKILL.md change is 7a0f512c0 (11-22, wording), so one text applies. No
+      watchFor items on this entry. The check was by script (status, kind, prs,
+      skillsUsed, friction count and a git log grep per log), then a read of the
+      frictions of flagged logs; I did not read all 33 in full. The Skill
+      promises a session log on main when work reaches an honest state, and a
+      re-invocation at merge. Delivery held: all 33 logs completed, none
+      missing, each with 1 to 31 journal commits on origin/main, and close-session and log-session in skillsUsed in all of them; the 38 PR numbers
+      they claim all appear in main's commit subjects. Merge-to-log gaps were
+      short: #3725 merged 00:27:14Z and logged 00:27:28Z, #3726 merged 00:35:13Z
+      and logged 00:35:39Z, #3720 merged 13:21:03Z and logged 13:21:21Z. Session
+      session_013zxzeQivG2v72EMRPiQ5aR, in-review last audit, is now completed
+      after #3710 merged at 00:57:18Z and the re-close ended at 00:57:37Z. No
+      revert in 14 days. Silent failure, repeat: the re-invoke after a merge is
+      unreliable. Four sessions record slips, all landed completed:
+      session_013zxzeTKxE9MSXFCu6Nqhr9 (11-25, nit, "the Stop hook had to remind
+      me"), session_013zxzeQLTeC8GETW73Aho8C (11-26, re-authored with log-session and was blocked twice), session_013zxzePo4mtQsMpDHLLDFmb (11-26,
+      major human-prompted closure, known) and session_013zxzeNzjxhJGhG6XbWHDf3
+      (11-27, log-session refused until close-session was re-invoked). None
+      appears after 11-27 01:01Z, but later sessions mostly had no merges, so a
+      fix is unproven. This is repeated, so the new evidence went onto open
+      issue #3714 (friction ledger entry close-session-bypassed-by-hand-log).
+      The non-user session_013zxzeStkfKoZxBQUkQd9pd (a visitor-loop run, 11-21)
+      is ruled out: its log is completed with no PRs and is committed in
+      a4fd3f607; it is absent from skillsUsed, the known accounting gap. Step
+      2's look-back leaves no trace in any log (33 of 33), so it cannot be
+      verified. Read-after-act docs frictions appear in at least 15 logs,
+      several noting the doc showed the call was fine. Role and gist read as
+      current. Reasoning: the end state is reliable; the failure is the moment,
+      not the outcome, since hooks catch a slip only after it happens. Idea: put
+      the trigger in step 3 as one sentence (a merge notification means re-invoke close-session before any other reply) and fold the unverifiable
+      look-back into step 1. Importance essential, unchanged. Next focus:
+      transcript-level order of events after each merge notification, and
+      whether the four slips stopped after 11-27 or later sessions simply had no
+      merges to test.

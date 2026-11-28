@@ -8,26 +8,10 @@ role: >-
   and the post-dispatch check that no finished subagent work is stranded. Every
   rule in it was paid for by a session that lost work.
 auditSummary:
-  date: "2026-11-27"
-  text: "Its worktree and hand-back rules hold: every claimed PR landed and no work was left stranded. Agents still trip the same guards, such as the first-dispatch read check, and often read git docs late."
+  date: "2026-11-28"
+  text: "Subagent work lands and nothing is stranded across the recent runs. The context files attached to visitor briefs were wrong in every recent run, since the re-read rule is aimed at the brief and not at its attachments."
 
 observations:
-  - date: "2026-10-18"
-    note: >-
-      Self-check (audit-skills behaviour check): 10/10 usedIn verified (no
-      stranded work, no merge-pr.ts dispatched to a subagent, no new
-      branch/worktree collision beyond the already-known owner-accepted
-      #1480 recurrence and the self-caught #1480-adjacent nit in
-      session_01BLrfuHbMMEmjZZ7STpe1AN, both already tracked). Of 122
-      notUsed sessions, 64 ruled out by goal alone, 58 flagged plausible, 12
-      opened in full spanning every category (clear-backlog, visitor-loop,
-      the 48-subagent ADR-rewrite-prep run, frictions-to-fixes,
-      audit-docs/audit-skills, prune-trial, glassbox-update) - all clean,
-      every git-touching dispatch either strictly read-only, correctly
-      isolated, or (for clear-backlog) routed through the Workflow tool
-      rather than this Skill's own Agent-tool remit, a shape the 2026-10-15
-      entry already names. No new silent failure, no new missed invocation.
-      Grade/role unchanged (essential).
   - date: "2026-10-19"
     note: >-
       Self-check (audit-skills behaviour check), 10/10 usedInLogs sessions
@@ -234,3 +218,45 @@ observations:
       needs the script's output checked, not a two-axis review. Next focus:
       sections 2 and 6 from raw events, whether pilot-first was followed in the
       briefs, section 7, and the two harvest non-users.
+  - date: "2026-11-28"
+    note: >-
+      Behaviour check across 25 run logs of sessions that used the Skill and 21
+      non-user logs (11-25 to 11-28); raw event streams were not read, so run-level claims are self-reported. SKILL.md last changed in 7a0f512c0 (11-22,
+      one phrase), before every run; role and gist are current and the entry has
+      no watchFor items. The Skill promises that every subagent's work lands, is
+      right and is never stranded. Delivery held: the runs claim 35 distinct PR
+      numbers (3665 to 3673, 3683 to 3685, 3687 to 3697, 3706 to 3709, 3711,
+      3712, 3715, 3717 to 3720, 3726), each found as a number in origin/main's
+      subjects since two weeks ago; git worktree list shows only the main
+      checkout, so nothing is stranded; no revert. Of the 21 non-users, 8
+      dispatched nothing (including both previously unchecked harvest sessions
+      session_013zxzeP4F3aYSUT97sA7pou and session_013zxzeSJY7CjGgJdwhJmTgV) and
+      13 dispatched agents and had the Skill in docsRead, five of them denied
+      once by the read guard and then retried; none is a missed invocation. New
+      pattern, minor silent failure: the lead-written context file attached to
+      visitor-loop briefs was defective in all three runs against section 3's
+      every value copied from its source: session_013zxzeRByCWuYi8gThTfvKA
+      (garbled URL-rule line, editor guessed pingbacks),
+      session_013zxzeQMTfvZZmLxob6aT7A (listed digests and sessions pages that
+      return 404) and session_013zxzeRAtiER4WiBiS7UMsb (aria-current note on the
+      pages line, midden trench listed twice). The visitor-loop auditor reached
+      the same finding independently. A brief also named a file that did not
+      exist (session_013zxzeQ3rmR3XHfvXpobcpr, a Kevin-post copy never created)
+      and one named a script without its path
+      (session_013zxzePxkwAcvTVUDd7sToK). Unverified:
+      session_013zxzeSaCTGsDruHYZ8cVWD logged that #3709 left main red for five
+      pushes; the builder's gate may not have covered rule-use.spec.ts, likely a
+      gate-scoping gap (see #3713). Minor: session_013zxzeSL3eQmU15DFjqDwqw
+      wrote no findings in a PR body though a reviewer listed a low note.
+      Repeats by run count: dispatch-read guard denied the first call in 7 runs,
+      double-background guard 5, review sha guard 5, gate started before review
+      ended 3, ledger-only PR forcing a two-agent review 2, late read-first docs
+      about 11, rule-use echo costing read-only agents 3. Section 2 isolation
+      and section 6 resume could not be checked from the logs, section 7 was not
+      exercised, and no collision was logged. Reasoning: dispatch work reliably
+      lands; the weakness is attached files escaping the re-read the Skill asks
+      of the brief. Idea: add to section 3 that an attached context file is part
+      of the brief, so check each path and URL in it against its source before
+      sending. Importance essential, unchanged. Next focus: section 2 isolation
+      and section 6 resume from raw events, whether the #3709 builder's gate
+      covered rule-use.spec.ts, and section 7.

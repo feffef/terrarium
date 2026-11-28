@@ -9,22 +9,10 @@ role: >-
   against the PRs' diffs, and merges its own gated PR on green. Scheduled; run
   by hand to catch up.
 auditSummary:
-  date: "2026-11-27"
-  text: "Writes a fact-checked daily Digest and archives old content, and two of the last three landed on main. The newest one is stuck behind a red main gate, which it reported honestly, and it never reads the Journal glossary."
+  date: "2026-11-28"
+  text: "Writes a fact-checked daily Digest and archives old content, and the last three all reached main. It has no step for a red main gate, so one run needed the owner to land it, and it never reads the Journal glossary."
 
 observations:
-  - date: "2026-10-18"
-    note: >-
-      Self-check (audit-skills behaviour check): fresh end-to-end audit of
-      session_01DeVdzgpEMamftEbbyv26qd (PR #2227, the 2026-10-17 Digest) -
-      merged, archive/retention sweep correct (7 consecutive dates, no
-      gaps/dupes), re-ran `digest.ts gather 2026-10-17` from scratch and the
-      rollup matched the published footer exactly (including the "worst"
-      claim, traced to the real friction it cites), 4 narrative claims
-      spot-checked against live PR bodies all accurate, genuine dispatched
-      fact-check subagent entry in the log. 19 consecutive clean daily
-      audits now. No reverts in the 2-week sweep. No new silent failure.
-      Grade/role unchanged.
   - date: "2026-10-19"
     note: >-
       Self-check (audit-skills behaviour check), session_01XueFVQyVySVEKHxSHTFeTh
@@ -207,3 +195,43 @@ observations:
       merges and the 2026-11-26 Digest lands without the next run duplicating
       it, the PR-body fact-check tallies against the logs, and whether anyone
       reads layers/journal/GLOSSARY.md.
+  - date: "2026-11-28"
+    note: >-
+      Behaviour check of session_013zxzePtpYfD71WKEC9Henf (11-28, PR #3725),
+      session_013zxzeQivG2v72EMRPiQ5aR (11-27, PR #3710) and
+      session_013zxzeSK7bEhaxexffUGupq (11-26, PR #3679); SKILL.md has no
+      changes in the window (last commits 1bf336e26 and 4a8ce620e, 11-20). No
+      watchFor items on the data file. The Skill promises one fact-checked
+      Digest per closed UTC day plus retention moves, merged through a gated PR.
+      Delivery verified on origin/main: merge da5fd12a7 holds three files (the
+      2026-11-27 Digest added, the 2026-11-20 Digest archived as R100), matching
+      the log; merge 036295128 holds one Digest and 28 R100 moves, so the
+      earlier item, the Digest PR #3710 that was blocked by a red main, merged and the
+      2026-11-26 Digest is on main with no duplicate; merge bf0b8137d for the
+      11-26 run is on main. The footer for 11-27 checks out (12 sessions ended
+      that day, 33 nit, 17 minor and 3 moderate friction logs sum to the stated
+      53) and the prose is 206 words inside the 100 to 250 bound; the Blog link
+      target exists. No revert in a 14-day grep. New, moderate, now resolved:
+      step 6 has no case for a red main. The 11-27 run found main red since
+      #3709 (rule-use.spec.ts) only after CI failed; merging main into the
+      branch pulled two session logs into the diff, so merge-pr refused the own-read verdict and a second full code-review was needed; the owner replied
+      in-session to retry, so a scheduled run needed a human to land it. Not
+      silent, since the log is honest. Minor new: verdict-line Own-read output
+      names the reviewed sha, not the head, so follow-up verdict lines were
+      typed by hand; and on 11-28 the draft copied five pushes from friction
+      text when the fact-check found six, the same class as copying a word count
+      (1,112 against 1,120) on 11-27. Repeats: git-conventions read after the
+      first git command 3 of 3 (9 of 9 with earlier notes; the auditor's own
+      scoped call was fine); first-draft fact-check caught wrong claims 3 of 3
+      (4, 1 and 4 fixed); layers/journal/GLOSSARY.md never read before writing
+      in 11-26 and 11-27 and read only at review time on 11-28, so the main
+      agent has read it once, late, in six runs; the dispatch-read guard blocked
+      the first Agent call once. Role and gist need no check since no change.
+      Reasoning: the Digest is dependable and its fact-check demonstrably works;
+      the lone new gap is an unplanned red main, which no Skill step covers.
+      Idea: add one line to step 2 to check origin/main's latest gate status
+      and, if red, say so in the PR body rather than waiting on it. Grade
+      routine unchanged; all three runs were scheduled. Next focus: whether any
+      run reads layers/journal/GLOSSARY.md before writing prose, whether the
+      next run checks main's gate status early, and PR-body fact-check tallies
+      and CI state, which were not checked.

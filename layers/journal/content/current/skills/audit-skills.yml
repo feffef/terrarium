@@ -9,48 +9,10 @@ role: >-
   Inventory's grades in line with usage as a by-product, self-merging those
   edits (ADR-0015).
 auditSummary:
-  date: "2026-11-27"
-  text: "Writes grounded notes and files issues that got fixed within a day or two. A rate-limited fan-out cost hours, and its scripts have rewritten whole files when only an append was needed."
+  date: "2026-11-28"
+  text: "Checks each Skill against its runs and keeps the Inventory current, with notes within bounds and issues filed on solid evidence. It writes its notes by hand without reading the Journal glossary, which costs rework."
 
 observations:
-  - date: "2026-10-18"
-    note: >-
-      Self-check: dispatched 13 behaviour-check subagents this run (same 13
-      behaviourChecks entries as 2026-10-17), each report independently
-      verified against primary sources before use. 10/13 came back fully
-      clean. Three verified findings this run, across three Skills:
-      (1) audit-skills' own 2026-10-11 run (PR #1753) and 2026-10-12 run
-      (PR #1799) both silently skipped ADR-0004's mandatory code-review
-      step before self-merging — confirmed via both sessions' logs (no
-      code-review in skillsUsed/docsRead/frictions, a 4-vs-3 Skill-tool-count
-      mismatch) and by the fact every run from 2026-10-13 onward reliably
-      lists `code-review` in skillsUsed. Not escalated as a new issue: this
-      is the exact platform-wide gap issue #1844 ("Require a code review
-      before an agent self-merges its PR," filed 2026-10-12 at the owner's
-      request) already covers, closed completed via merged PR #2058, which
-      now makes merge-pr.ts require a posted review verdict — the gap is
-      historical, caused no bad content, and the mechanical fix holds on
-      every later run checked. (2) prune-trial and visitor-loop each had one
-      verified, repeated finding escalated as new issues: #2228 (PR #2063's
-      self-reported line delta is wrong, 59→40/-19 not 60→46/-14, still
-      uncorrected in the open ledger entry after a 2026-10-16 observation
-      already flagged it) and #2229 (owner-corrections.ts's `unresolved()`
-      still credits only the first #N per line - confirmed live in the
-      script - letting PR #2225 batch 14 candidates onto one line
-      undetected, a 3rd/4th recurrence of #1515/#1721/#1912's root cause
-      that #1912's fix, PR #1931, only half-addressed). Step 3 closure
-      completeness: orphan scan clean (scanned: true, 1436 merged PRs, 1281
-      with a session), both orphan candidates carry `resolvedBy` (left
-      alone), orphanSuppressionLog both entries plausible
-      (`resolved-annotation`), humanPromptedClosures' one entry
-      (session_014uXxmT6359K4Z42a6We6Gh) already settled 2026-10-13,
-      manuallyRescuedClosures empty. No coverage gaps (3 on-disk,
-      not-yet-used Skills - glassbox-walkthrough, implement-spec, wait-what
-      - correctly left uninventoried per useCount: 0). No stale observations
-      past the 40-day window in any of the 13 files. Grade/role unchanged
-      (routine) - neither finding shows this Skill itself missing its own
-      delivery; both are findings about other Skills/mechanisms it exists to
-      catch.
   - date: "2026-10-19"
     note: >-
       Self-check (audit-skills behaviour check), 7/7 usedInLogs sessions
@@ -252,3 +214,42 @@ observations:
       focus: read one raw subagent report to see whether it carries role and
       gist verdicts and follows the prior Next focus, and whether #3689 closed
       the Stop-path hole raised in the 11-26 #3662 comment.
+  - date: "2026-11-28"
+    note: >-
+      Behaviour check of session_013zxzeNzjxhJGhG6XbWHDf3 (11-27, PR #3712,
+      merge ffc629f00) and session_013zxzePQedy4SaB83pQYkET (11-26, PR #3686,
+      merge b997e7980); both started after the last SKILL.md and brief change
+      (69617f9a8, 11-24), so one text applies, and the current session is itself
+      an audit-skills run and was not graded. No watchFor items. The Skill
+      promises a scorecard, one behaviour check per Skill, closure checks,
+      escalations only for significant or repeated findings, Inventory notes of
+      300 to 500 words each ending in Next focus, auditSummary lines and Routine
+      run costs, landed as a PR touching only skills/*.yml and routines/*.yml.
+      Verified: the 11-27 diff has 26 files (10 under routines, 16 under skills,
+      nothing else) matching the log's filesEdited; a script over the merge
+      shows 14 Skills with a 2026-11-27 note of 354 to 457 words, all ending
+      Next focus, auditSummary lines of 29 to 40 words, and 14 notes for 14
+      subagents. The escalation comment on #3634 exists with the 11-27 session
+      header on line one. The 11-26 run's three comments (#3634, #3680, #3662)
+      were confirmed earlier. No revert in a 14-day grep. Repeats: the tenant-glossary miss, at least seven sightings: the 11-27 run wrote 14 Inventory
+      notes without reading layers/journal/GLOSSARY.md and the 11-26 run wrote
+      diary entry where the glossary says session log, caught only in code-review; open issue #3705 covers it and step 5 does not name the glossary.
+      Docs read late (github-integration after gh api searches) in both runs, a
+      nit. Draft notes carried a placeholder session id and four wrong issue or
+      PR states on 11-27, caught by check-states and a re-read. Rate limit: on
+      11-26 all 16 subagents failed on a rate limit (friction moderate, 19489
+      seconds); it did not recur on 11-27, when 14 auditors took 36 to 157
+      seconds and the run took 948 seconds, so n=1 of 2. log-session refused
+      until close-session was re-invoked after the merge, a nit. The per-Skill
+      role and gist verdict could not be confirmed (nine runs now): the logs
+      hold no subagent reports. Role reads current at 47 words with no ids; the
+      gist is accurate but omits the behaviour checks that are the Skill's main
+      work, an optional rewrite. Reasoning: delivery is clean and the notes meet
+      the word bound every time; the costs are rework from hand-drafting notes.
+      Idea: extend prune-observations.ts into an append-observation script that
+      checks word count, placeholder ids and issue states and prints each
+      Skill's grade, which both runs' ideas lists already propose. Importance
+      routine, unchanged: both runs were scheduled. Next focus: whether a raw
+      subagent report carries a role and gist verdict, and whether #3689 closed
+      the log-session Stop-path hole; read the dispatch-subagents rate-limit
+      handling from the Skill text rather than the log.

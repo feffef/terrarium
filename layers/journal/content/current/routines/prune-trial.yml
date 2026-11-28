@@ -1,13 +1,5 @@
 name: prune-trial
 runs:
-  - session: session_013zxzeSXsJSnGEYu9VQYXFH
-    startedAt: 2026-10-28T13:23:53Z
-    durationSeconds: 6669
-    inputTokens: 156
-    outputTokens: 29144
-    cacheReadTokens: 5936002
-    cacheWriteTokens: 375230
-    costUsd: 2.1607427
   - session: session_013zxzePQM2TjRCTtcKaV61o
     startedAt: 2026-10-29T13:39:01Z
     durationSeconds: 913
@@ -240,3 +232,11 @@ runs:
     cacheReadTokens: 6735257
     cacheWriteTokens: 254799
     costUsd: 1.7955722
+  - session: session_013zxzeQUGwaWUa1tvt7hn43
+    startedAt: 2026-11-27T13:09:25Z
+    durationSeconds: 716
+    inputTokens: 183
+    outputTokens: 32900
+    cacheReadTokens: 6828599
+    cacheWriteTokens: 291385
+    costUsd: 1.8966134

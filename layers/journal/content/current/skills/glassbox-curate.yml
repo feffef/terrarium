@@ -21,8 +21,8 @@ watchFor:
   - "A session given an instruction grilled the person and had its outline confirmed before it built anything."
   - "The page conventions and the governing docs were read before the first draft, not after."
 auditSummary:
-  date: "2026-11-27"
-  text: "Produces reviewed new Glass Box lessons that land, and its checks held in the latest runs. It still stops early with items left, and its newest session was closed only after the owner asked."
+  date: "2026-11-28"
+  text: "Improves the Glass Box guide well when a run changes sentences, with reviews and gates before merge. It often stops early and skips the checker and reader on rename-only work, which the Skill has no rule for."
 
 observations:
   - date: "2026-11-07"
@@ -117,3 +117,46 @@ observations:
       owner-merge PRs are left open at close. Next focus: whether context really
       passed the limit at the 11-26 stop, CI status of the 11-26 PR heads, and
       the Reviewed lines of #3692 and #3694.
+  - date: "2026-11-28"
+    note: >-
+      Behaviour check of four runs: session_013zxzeRZYEUqDMuAoUesKV7 (11-25, PR
+      #3671), session_013zxzePo4mtQsMpDHLLDFmb (11-26, #3692, #3693, #3694),
+      session_013zxzeR9wuoRUezpWhAdNaL (11-27, #3718) and the human-driven
+      session_013zxzeSL3eQmU15DFjqDwqw (11-27, #3726, not a Loop run). SKILL.md
+      last changed db1ae60, before all four. Watch for verdicts: 1 review and
+      gate before merge, held (the #3726 body names its review and gate, merged
+      by the agent with the owner's quoted green light as the waiver; the others
+      were owner merges). 2 writer, checker and fresh reader with nothing
+      skipped, held for the 11-25 and 11-26 runs and failed for the 11-27 run
+      (summary: "Not done: the fresh-reader and claim-check steps (no sentence
+      changed)", friction 4 admits rule 7 forbids it) and for the interactive
+      run (no writer, checker or reader). 3 subject read through parts files,
+      held for two runs and held-with-disclosure for the others, which stated
+      why. 4 no-argument session continues until context is full or nothing is
+      left, failed: the 11-25 run ended to wait on checks, the 11-26 run stopped
+      citing context and three PRs awaiting the owner, and the 11-27 run ended
+      25 seconds after the owner's merge, calling the rest left for the next
+      run; this is about the eleventh early stop (the prior tally is
+      unverified). 5 run entry names the item and the page leaves with fewer
+      items, held for 11-25 and 11-26 and failed for 11-27, which kept an owner
+      direction and added a soft decision. 6 instruction grilling, could not
+      tell: no run had an argument. 7 docs before the first draft, held for
+      three runs and failed for the interactive run (frictions 3, 4 and 5: it
+      never read writing-pages.md or the overview). Delivery: all six PRs merged
+      by the owner or agent with green gates on their final heads; no revert on
+      guide and workshop paths. New, minor, n=2 silent failure: the Skill has no
+      lane for rename-only or move-only runs, so one run skipped checker and
+      reader openly and the other ran outside the run machinery while still
+      invoking the Skill; both logs ask for a rule. New, n=1: #3718 changed five
+      public URLs with 404s at the old addresses, the redirect question sits in
+      the PR body and no answer is visible. Known repeats: Where-next swaps
+      judged by description, a trailing ampersand gate guard, the Stop hook
+      demanding commits mid-run, a run-entry colon failing content validation,
+      and a human-prompted closure on 11-26. Escalation: the repeated finding
+      went to open issue #3634 as a comment. Role and gist: not re-read this
+      run, unverified. Reasoning: the Loop does its job when there are sentence
+      changes and drifts to early stops and skipped checks on small or move-only
+      work. Idea: add to rule 7 what a rename-only run owes, and have a no-argument Loop that ends right after a merge notification restart step 2.
+      Importance routine, unchanged. Next focus: the Inventory role and gist,
+      whether the run tails hold anything, and whether the owner answered
+      #3718's redirect question.

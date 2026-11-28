@@ -14,8 +14,8 @@ watchFor:
   - "Existing Seedlings were checked without reading the whole issue list into the run's own context."
   - "No new Seedling duplicates an open issue or one the owner closed as not planned."
 auditSummary:
-  date: "2026-11-27"
-  text: "Files well-formed, evidence-backed ideas as Seedlings without duplicates. It repeatedly stopped early with a vague reason before filling its quota; a rework landed after these runs and is untested."
+  date: "2026-11-28"
+  text: "Turns recent ideas into well-formed, distinct proposals that wait for the owner. It stops early with a free-text reason on every recent run, short of its quota, and its list reading is costly."
 
 observations:
   - date: "2026-11-13"
@@ -85,3 +85,45 @@ observations:
       untested by any run. Next focus: whether the post-fef027a5d stop wording
       and quota arithmetic hold in the next run, and whether role and gist still
       match.
+  - date: "2026-11-28"
+    note: >-
+      Behaviour check of session_013zxzePSaj6hZQUzYVaqg4f (11-25),
+      session_013zxzeSJY7CjGgJdwhJmTgV (11-26) and
+      session_013zxzeP4F3aYSUT97sA7pou (11-27). The first two ran before
+      fef027a5d (11-26 21:37Z, digest replaces evidence); 11-27 is the first run
+      on the digest text and after 2dc4441d7 (simplifying required for workflow
+      clusters only). I read the logs' opening sections (11-27 in full) but not
+      the 11-25 and 11-26 rulesUse sections. Watch for 1, stop reason: failed.
+      On 11-27 the log says it stopped after 8 clusters, "because the digest and
+      code checks used up the run budget", which is neither quota nor 30
+      clusters; 11-25 says it stopped for budget after 8 clusters; on 11-26 the
+      summary says the product quota filled after 13 clusters and 4 Seedlings,
+      which is hard to reconcile with a quota of 10 and I could not tell. Watch
+      for 2, Seedlings exist and are well formed: held. #3722, #3723 and #3724
+      (11-27) and #3700 to #3704 (11-26) are open, labelled ready-for-human plus
+      an area label, with the run's header on line one, a Harvested key line
+      naming the source session and Verified and Assumption bullets. #3704 is
+      the only retro Seedling in the window. Watch for 3, no whole-list read:
+      could not tell, because the digest is a different mechanism (a 1518-line
+      file read in 560-line pages; one read exceeded the token cap). Watch for
+      4, no duplicates: held on a spot check only; the new Seedlings each say no
+      issue, ruling or ledger entry covers them, but I did not search the
+      tracker. No revert in 14 days; later commits are forward fixes and a prune
+      trial. No new silent failure or missed invocation. Repeats: early stop
+      with a free-text reason on all three runs (about ten earlier by prior
+      notes, unverified); read-first docs late 3 of 3; check-clusters rejected
+      the file on 11-25 and 11-26 with errors naming neither the comma separator
+      nor the computed count. New minor, n=1: a 560-line digest read exceeds the
+      token cap and the Skill gives no page size. Separately, the 11-26 run
+      reported its session log authored after a refused log-session call, which
+      is a log-session problem. Role and gist are current; the role still omits
+      the optional retro Seedling. Reasoning: Seedlings are well formed and
+      distinct, so the output is useful; what fails is the stop discipline, and
+      the owner may retire watch items 2 to 4 since they held again. Idea: make
+      check-clusters accept only a stopped line of quota, 30 clusters or budget
+      with a number, printing a filled example on rejection, and state a digest
+      page size of about 300 lines in step 3. Importance routine, unchanged.
+      Next focus: whether the stop line and the digest's effect on per-cluster
+      cost hold on a run that fills quota, a tracker search for duplicates of
+      #3700 to #3704 and #3722 to #3724, and the 11-26 stop reason and its 14065
+      second duration.
