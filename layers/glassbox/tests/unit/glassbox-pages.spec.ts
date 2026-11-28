@@ -119,9 +119,10 @@ return \`out\`. // Not. A. Sentence.
 const problemsOf = (file: string, source: string, space = 'guide') => glassboxPageProblems(file, source, site, fakeGit, space)
 
 describe('glassboxPageProblems on fixture pages', () => {
-  it('passes a good Lesson, House rules Lesson, Walkthrough and landing page', () => {
+  it('passes a good Lesson, House rules and Self-improvement Lessons, Walkthrough and landing page', () => {
     expect(problemsOf('nuxt-content/01.collections.md', lesson)).toEqual([])
     expect(problemsOf('terrarium-practice/01.gate.md', lesson.replace(/^Full reference.*$/m, ''))).toEqual([])
+    expect(problemsOf('self-improvement/01.gate.md', lesson.replace(/^Full reference.*$/m, ''))).toEqual([])
     expect(problemsOf('walkthroughs/from-file-to-browser.md', walkthrough)).toEqual([])
     expect(problemsOf('index.md', `${frontmatter}\nWelcome.\n`)).toEqual([])
   })
