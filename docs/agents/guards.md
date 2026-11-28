@@ -39,9 +39,6 @@ follow it and don't route around it. If it is wrong, say so on the guard's issue
 | `read-first-hint.ts` | nothing: a hint, not a guard. At a session's first call of a kind CLAUDE.md or the UI rule binds to a doc (git, GitHub, issue write, screenshot) it points to that doc, once per doc. After a successful `mcp__github__create_pull_request` in the main session it says to invoke `close-session`, unless that was invoked after the PR call; likewise after a successful `merge-pr.ts` run | its script header | #1754, #1859, #2209, #2772 |
 | `adr-read-hint.ts` | nothing: a hint, not a guard. After an `Edit`, a `Write` or a Bash `git commit` it points to each ADR whose rule `paths` match a file written, or that the change names, unless this agent already read it in full | its script header | #2286, #2433 |
 | `rule-load-ledger.ts` | nothing: an `InstructionsLoaded` recorder. Appends each path-scoped rule load, its trigger file and agent to `.session-logs/rule-loads/`, which the session log's `ruleUse` reads | its script header; `scripts/session/rule-use.ts` | #3009 |
-| `subagent-note.ts` | nothing: a `SubagentStart` hint. Tells every subagent it must run `echo rule-use:` before its final reply, then do what the reply to it says | its script header; `scripts/session/rule-use.ts` | #3009, #3020 |
-| `rule-use-ask.ts` | nothing: a hint, not a guard. After an agent's first bare `echo rule-use:` call it lists the rules that loaded for that agent, start-loaded ones included, and says what each value means, with what each rule governs; after a call that names a rule without a valid value, gives a value without its word, or leaves a loaded rule out, it says which were not recorded | its script header; `scripts/session/rule-use.ts` | #3020 |
-| `subagent-rule-use-stop.ts` | blocks a subagent's stop, up to 3 times per agent, while a rule that loaded for it has no rating; a bare `echo rule-use:` passes | its script header; `scripts/session/rule-use.ts` | #3633 |
 | `network-start.ts` | nothing: a `SessionStart` hint. Probes the hosts in `PROBED_HOSTS` through the proxy and prints which are readable or blocked; prints nothing without `HTTPS_PROXY` | its script header; `environment-caveats.md` (what blocked means) | #2959 |
 | `unshallow-on-start.ts` | nothing: a `SessionStart` hook, not a guard. Unshallows the clone and sets `origin/HEAD` when unset; a failure is swallowed | its script header; `git-conventions.md` | #772, #930 |
 
@@ -49,7 +46,7 @@ follow it and don't route around it. If it is wrong, say so on the guard's issue
 
 ## Conventions every guard follows
 
-- **A crash.** A crashing hint, recorder, SessionStart hook, `deferred-tool-guard`, `harness-tag-stop`, `merge-close-stop`, `pr-subscribe-stop`, `subagent-rule-use-stop` or `tenant-glossary-guard`
+- **A crash.** A crashing hint, recorder, SessionStart hook, `deferred-tool-guard`, `harness-tag-stop`, `merge-close-stop`, `pr-subscribe-stop` or `tenant-glossary-guard`
   lets the action go ahead (each uses a bare `|| true`). Any other guard that crashes or can't read
   its context or payload blocks it: its hook entry sets `"onFailure": "block"`,
   which also blocks when the hook can't start or times out (#2073). That needs

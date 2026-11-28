@@ -26,7 +26,7 @@ import { formatJournalDuration } from './duration'
 import { formatRoutineMetric } from './routineRuns'
 import { REPO_URL } from '../../../../app/utils/repo'
 import { sessionUrl } from '#shared/session-url'
-import { isRulePath, loadedRules, ruleLoad, ruleValue, type RuleLoad, type RuleUseEntry } from '#shared/schemas/session'
+import { isRulePath, loadedRules, ruleLoad, type RuleLoad, type RuleUseEntry } from '#shared/schemas/session'
 
 /** The dashboard loads only the newest this-many sessions: every loaded one
  *  ships in the HTML, and uncapped, `archived` passed 10 MB. */
@@ -332,7 +332,6 @@ export function sessionCardViews(
 // A loaded rule an agent left out has no value, which counts against the rule.
 const taskOf = (e: RuleUseEntry, subagents: Subagent[]) => (e.subagent === undefined ? undefined : subagents[e.subagent]?.task)
 const withTask = (why: string, task?: string) => (task ? `${task}: ${why}` : why)
-const percent = (n: number, of: number) => (of ? Math.round((100 * n) / of) : 0)
 
 function tally(items: string[]): string {
   const counts = new Map<string, number>()
@@ -374,7 +373,7 @@ export function sessionRuleUseView(s: SessionDoc, ruleTitles: Record<string, str
       whys: r?.why ? [r.why] : [],
     }
   }
-  // A rule an agent named but never loaded keeps its row; its hover says so.
+  // Old logs: a rule a subagent named but never loaded keeps its row, with no ratings shown.
   const subRules = [...new Set(subs.flatMap((e) => [...e.loads.map((l) => l.rule), ...e.reported.map((r) => r.path).filter(isRulePath)]))]
   return {
     main: {
@@ -387,32 +386,15 @@ export function sessionRuleUseView(s: SessionDoc, ruleTitles: Record<string, str
     },
     subagents: {
       total: subs.length,
-      unanswered: subs.filter((e) => !e.answered).length,
       rules: startFirst(subRules.map((path) => {
         const loaders = subs.filter((e) => e.loads.some((l) => l.rule === path))
-        const namedUnloaded = subs.filter((e) => !loaders.includes(e) && e.reported.some((r) => r.path === path))
-        // Shares count a subagent that named the rule without a recorded load too.
-        const answering = [...loaders, ...namedUnloaded].filter((e) => e.answered)
         const loads = loaders.flatMap((e) => e.loads.filter((l) => l.rule === path))
-        const valueOf = (e: RuleUseEntry) => e.reported.find((r) => r.path === path)?.value
-        const reports = subs.flatMap((e) => e.reported.filter((r) => r.path === path).map((r) => ({ r, task: taskOf(e, subagents) })))
-        const unnamed = answering.filter((e) => !valueOf(e)).length
         return {
           path,
           title: ruleTitles[path],
           alwaysLoaded: loads.some((l) => l.via === 'start'),
           hover: [path, ...subagentLoadLines(loads)].join('\n'),
           loadedBy: loaders.length,
-          values: ruleValue.options.map((value) => {
-            const n = answering.filter((e) => valueOf(e) === value).length
-            const whys = [...new Set(reports.filter(({ r }) => r.value === value).flatMap(({ r, task }) => (r.why ? [withTask(r.why, task)] : [])))]
-            return {
-              value,
-              n,
-              percent: percent(n, answering.length),
-              hover: [`${n} of ${answering.length} answering subagents that loaded${namedUnloaded.length ? ' or named' : ''} it rated it ${value}${unnamed ? `; ${unnamed} gave no value` : ''}`, ...whys].join('\n'),
-            }
-          }).filter((v) => v.n > 0),
         }
       })),
     },

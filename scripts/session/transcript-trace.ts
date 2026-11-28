@@ -46,7 +46,7 @@ import {
 } from './shell-reads.ts'
 import { adrDocNumber, adrHintsIn, ruleAdr, ruleBlockFiles, type AdrHintVia } from '../lib/adr-rules.ts'
 import { root, runIfMain } from '../lib/cli.ts'
-import { RULE_USE_CALL, isRulePath, reportedNames, ruleKey, ruleName, type RuleLoadRow } from './rule-use.ts'
+import { isRulePath, ruleKey, ruleName, type RuleLoadRow } from './rule-use.ts'
 
 /** The one authored-scratch file per container (one session per container in the
  *  remote model). Gitignored — its home is `main`. Single-homed here so its
@@ -154,10 +154,6 @@ export interface MechanicalTrace {
    *  so a rule it reports is not marked unloaded. Kept per agent: a main agent
    *  can't claim a rule only its subagent read. */
   rulesRead: string[]
-  /** The SubagentStart note reached this agent. */
-  helpedAsked: boolean
-  /** What its last `echo rule-use:` call reported; absent when it never ran it. */
-  reportedNamed?: ReportedEntry[]
   /** Subagent entries (which ones: `ruleUseEntry`), in `subagents` order. Set by `foldSubagentTrace`. */
   ruleUse?: RuleUseEntry[]
   /** Instruction docs only a subagent or workflow agent read. Set by `foldSubagentTrace`. */
@@ -625,7 +621,6 @@ export function extractTrace(
   const rules: string[] = []
   const alwaysLoadedRules: string[] = []
   const loads: RuleLoad[] = []
-  let helpedAsked = false
   const ruleLoadedAt = new Map<string, number>()
   const hintAt: (readonly [{ adr: string; via: AdrHintVia }, number])[] = []
   const usageById = new Map<string, ApiUsage>()
@@ -643,7 +638,6 @@ export function extractTrace(
       const hinted = hintedRules(att.content)
       rules.push(...hinted)
       loads.push(...hinted.map((rule) => ({ rule, via: 'hint' as const })))
-      if (hintText(att.content).includes(RULE_USE_CALL)) helpedAsked = true
       hintAt.push(...adrHintsIn(hintText(att.content)).map((h) => [h, i] as const))
     }
     if (att?.type === 'instructions') {
@@ -746,9 +740,6 @@ export function extractTrace(
         .filter((rule) => !alwaysLoadedRules.includes(rule) && !loadByRule.has(rule)).map((rule) => ({ rule, via: 'read' as const })),
     ],
     rulesRead: dedup(reads).filter((p) => isRulePath(p)).map(ruleKey),
-    helpedAsked,
-    // A denied call (a permission classifier, say) is no answer.
-    reportedNamed: reportedNames(bashCommandsOf(records).filter((c) => !c.failed).map((c) => c.command), rel),
     skillsUsed: dedup([...skills, ...commandSkills]),
     commandSkills: dedup(commandSkills),
     subagents,
@@ -924,13 +915,13 @@ export function foldSubagentTrace(
     // An always-loaded rule counts as loaded at start, however it arrived.
     const asStart = s.ruleLoads.map((l) => (folded.rulesGlobal.includes(l.rule) ? { rule: l.rule, via: 'start' as const } : l))
     const loads = triggered(asStart.filter((l, j) => asStart.findIndex((m) => m.rule === l.rule) === j), agentId ? rowsOf(agentId) : [])
-    if (!s.helpedAsked && !s.reportedNamed && !loads.length) return []
+    if (!loads.length) return []
     return [{
       by: agent?.type ?? 'workflow',
       ...(agent ? { subagent: rowOf(i) } : {}),
-      answered: !!s.reportedNamed,
+      answered: false,
       loads,
-      reported: markUnloaded(s.reportedNamed ?? [], seenRules(loads, s.rulesRead)),
+      reported: [],
     }]
   }).sort((a, b) => (a.subagent ?? Infinity) - (b.subagent ?? Infinity))
   folded.rulesFollowedUp = dedup([...trace.rulesFollowedUp, ...subs.flatMap((s) => s.rulesFollowedUp)])

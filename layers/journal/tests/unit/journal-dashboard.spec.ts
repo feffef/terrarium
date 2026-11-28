@@ -553,7 +553,7 @@ describe('sessionCardViews', () => {
       })
     })
 
-    it('tallies subagents per rule, with shares over the answering ones that loaded it', () => {
+    it('tallies subagents per rule by loads only, whether or not an old log rated them', () => {
       const c = view({
         subagents: [{ type: 'Explore', task: 'scan' }, { type: 'Explore', task: 'check' }, { type: 'Explore', task: 'late' }],
         ruleUse: [
@@ -565,32 +565,14 @@ describe('sessionCardViews', () => {
       expect(c.ruleUse!.main).toEqual({ answered: null, rules: [] })
       expect(c.ruleUse!.subagents).toEqual({
         total: 3,
-        unanswered: 1,
         rules: [{
           path: '.claude/rules/adr-0004.md',
           title: undefined,
           alwaysLoaded: false,
           hover: '.claude/rules/adr-0004.md\nnative 2 · hint 1\ntriggered by a.ts ×2',
           loadedBy: 3,
-          values: [{ value: 'backed', n: 1, percent: 50, hover: '1 of 2 answering subagents that loaded it rated it backed; 1 gave no value\nscan: x' }],
         }],
       })
-    })
-
-    it('lists each value\'s whys, with the subagent task, in its hover', () => {
-      const rep = (value: 'missed' | 'steered', why: string) => [{ path: '.claude/rules/adr-0004.md', value, why }]
-      const c = view({
-        subagents: [{ type: 'Explore', task: 'a' }, { type: 'Explore', task: 'b' }, { type: 'Explore', task: 'c' }],
-        ruleUse: [
-          { by: 'Explore', subagent: 0, answered: true, loads: [load('adr-0004.md', 'native')], reported: rep('missed', 'late: header added after the guard') },
-          { by: 'Explore', subagent: 1, answered: true, loads: [load('adr-0004.md', 'native')], reported: rep('missed', 'skipped: never ran it') },
-          { by: 'Explore', subagent: 2, answered: true, loads: [load('adr-0004.md', 'native')], reported: rep('steered', 'ran the gate') },
-        ],
-      })
-      expect(c.ruleUse!.subagents.rules[0]!.values.map((v) => v.hover)).toEqual([
-        '1 of 3 answering subagents that loaded it rated it steered\nc: ran the gate',
-        '2 of 3 answering subagents that loaded it rated it missed\na: late: header added after the guard\nb: skipped: never ran it',
-      ])
     })
 
     it('shows the session-wide always-loaded rules under main on a log with no start loads', () => {
@@ -608,7 +590,7 @@ describe('sessionCardViews', () => {
         ],
       })
       expect(c.ruleUse!.main.rules.map((r) => [r.path, r.value, r.hover])).toEqual([['.claude/rules/adr-0012.md', 'steered', '.claude/rules/adr-0012.md\nno load recorded']])
-      expect(c.ruleUse!.subagents.rules.map((r) => [r.path, r.loadedBy, r.values.map((v) => v.percent)])).toEqual([['.claude/rules/adr-0012.md', 0, [100]]])
+      expect(c.ruleUse!.subagents.rules.map((r) => [r.path, r.loadedBy])).toEqual([['.claude/rules/adr-0012.md', 0]])
     })
 
     it('says who reported a doc instead of "no verdict"', () => {

@@ -3,7 +3,7 @@
 // rule-load ledger in, the stitched session log out.
 import { describe, expect, it } from 'vitest'
 import { extractTrace, foldSubagentTrace, stitch, type AuthoredScratch } from '../../scripts/session/transcript-trace.ts'
-import { governsLine, reportedNames, ruleUseCall, SUBAGENT_NOTE, unratedRules, type RuleLoadRow } from '../../scripts/session/rule-use.ts'
+import { governsLine, unratedRules, type RuleLoadRow } from '../../scripts/session/rule-use.ts'
 import { validateEntry } from '../../scripts/session/journal-files.ts'
 
 const NO_ENV = {}
@@ -14,7 +14,6 @@ const hinted = (rule: string) => ({
   attachment: { type: 'hook_additional_context', content: [`Files this command read are governed by these rules:\n\nContents of .claude/rules/${rule}:\n\n# x`] },
 })
 const always = (rule: string) => ({ type: 'attachment', attachment: { type: 'instructions', files: [{ path: `/repo/.claude/rules/${rule}` }] } })
-const note = { type: 'attachment', attachment: { type: 'hook_additional_context', hookEvent: 'SubagentStart', content: [SUBAGENT_NOTE] } }
 const bash = (command: string) => ({ type: 'assistant', message: { content: [{ type: 'tool_use', name: 'Bash', input: { command } }] } })
 const authored = (extra: Partial<AuthoredScratch> = {}): AuthoredScratch => ({
   session: 'session_01RU', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [], ...extra,
@@ -81,73 +80,15 @@ describe('ruleUse — the main agent', () => {
   })
 })
 
-describe('reportedNames() — what an echo rule-use: call reported', () => {
-  const S = 'echo rule-use:'
-  // A rule needs a value to count, so these name-only cases give each one.
-  const names = (args: string) => reportedNames([`${S} ${args.replace(/(rule:[^\s,>&']+)/g, '$1=steered')}`], (p) => p)?.map((e) => e.path)
-  it('normalises rule names, with or without .md', () => {
-    expect(names('rule:adr-0004 rule:adr-0005.md doc:docs/a.md')).toEqual(['.claude/rules/adr-0004.md', '.claude/rules/adr-0005.md', 'docs/a.md'])
-  })
-  it('drops redirections, flags, a literal none and separating commas', () => {
-    expect(names('-v rule:a.md, doc:docs/b.md > /dev/null 2>&1')).toEqual(['.claude/rules/a.md', 'docs/b.md'])
-    expect(names('rule:a.md >>log')).toEqual(['.claude/rules/a.md'])
-    expect(names('none')).toEqual([])
-  })
-  it('splits one quoted argument holding several names', () => {
-    expect(names("'rule:a.md doc:docs/b.md'")).toEqual(['.claude/rules/a.md', 'docs/b.md'])
-  })
-  it('drops every redirection form with its target, and NONE in any case', () => {
-    expect(names('rule:x.md &> log doc:docs/a.md &>>log2 2> err NONE')).toEqual(['.claude/rules/x.md', 'docs/a.md'])
-  })
-  it('folds a .MD extension to .md, and keeps a name before an unspaced redirect', () => {
-    expect(names('rule:adr-0004.MD')).toEqual(['.claude/rules/adr-0004.md'])
-    expect(names('rule:a>out rule:b.md>/dev/null 2>err rule:')).toEqual(['.claude/rules/a.md', '.claude/rules/b.md'])
-    expect(names('rule:adr-0004>out doc:docs/a2>>log 2>&1')).toEqual(['.claude/rules/adr-0004.md', 'docs/a2'])
-  })
-  it('reads a rule value after the last =, in any case; drops a rule with no known value; a doc takes none', () => {
-    expect(reportedNames([`${S} rule:a.md=steered rule:b=UNRELATED, rule:c=yes rule:d doc:docs/x.md=steered rule:e.md=changed rule:f=x=In-Scope`], (p) => p)).toEqual([
-      { path: '.claude/rules/a.md', value: 'steered' },
-      { path: '.claude/rules/b.md', value: 'unrelated' },
-      { path: 'docs/x.md' },
-      { path: '.claude/rules/f=x.md', value: 'in-scope' },
-    ])
-  })
-  it('reads the word after a colon for the values that need one, keeping any detail', () => {
-    expect(reportedNames([`${S} rule:a.md=missed:late rule:b.md=duplicate:skill:close-session rule:c.md=confirmed:n/a rule:d.md=CONFIRMED:Agreed doc:docs/x.md=missed:late`], (p) => p)).toEqual([
-      { path: '.claude/rules/a.md', value: 'missed', why: 'late:' },
-      { path: '.claude/rules/b.md', value: 'duplicate', why: 'skill: close-session' },
-      { path: '.claude/rules/c.md', value: 'confirmed', why: 'n/a:' },
-      { path: '.claude/rules/d.md', value: 'confirmed', why: 'agreed:' },
-      { path: 'docs/x.md' },
-    ])
-  })
-  it('leaves out a value that needs a word and has none or a wrong one, and the retired backed', () => {
-    const call = ruleUseCall([`${S} rule:a.md=missed rule:b.md=duplicate:friend rule:c.md=backed rule:d.md=steered:late rule:e.md=in-scope`], (p) => p)!
-    expect(call.entries).toEqual([{ path: '.claude/rules/d.md', value: 'steered' }, { path: '.claude/rules/e.md', value: 'in-scope' }])
-    expect(call.unvalued).toEqual(['.claude/rules/a.md', '.claude/rules/b.md', '.claude/rules/c.md'])
-  })
-  it('treats an empty value as missing, keeps = in a doc path, and keeps an earlier value on a later bare mention', () => {
-    expect(reportedNames([`${S} rule:x= rule:y==steered doc:docs/a=b.md rule:z=steered rule:z`], (p) => p)).toEqual([
-      { path: '.claude/rules/y.md', value: 'steered' },
-      { path: 'docs/a=b.md' },
-      { path: '.claude/rules/z.md', value: 'steered' },
-    ])
-  })
-  it('finds a call inside bash -c or -lc, quoted or by echo\'s path', () => {
-    expect(reportedNames([`bash -c "${S} rule:a.md=steered"`], (p) => p)?.map((e) => e.path)).toEqual(['.claude/rules/a.md'])
-    expect(reportedNames([`bash -lc '${S} rule:a.md=steered'`], (p) => p)?.map((e) => e.path)).toEqual(['.claude/rules/a.md'])
-    expect(reportedNames(["/bin/echo 'rule-use:' rule:a.md=steered"], (p) => p)?.map((e) => e.path)).toEqual(['.claude/rules/a.md'])
-  })
-})
-
 describe('ruleUse — subagents', () => {
   const main = extractTrace([cwd], NO_ENV)
   const sub = (records: Record<string, unknown>[], agentId = 'a1', type = 'general-purpose') =>
     ({ records: [cwd, ...records], agent: { type, task: 't' }, agentId })
 
-  it('recovers a subagent answer from its echo rule-use: call, normalising the names', () => {
-    const records = [note, always('adr-0003.md'), native('adr-0004.md'), native('adr-0017.md'),
-      bash('echo rule-use: rule:adr-0003.md=duplicate:hook rule:adr-0004.md=steered doc:/repo/docs/agents/pr-workflow.md rule:adr-0099.md=unrelated')]
+  it('records a subagent\'s loads with the ledger trigger and no rating', () => {
+    const records = [always('adr-0003.md'), native('adr-0004.md'), native('adr-0017.md'),
+      // A leftover echo from an older session is no answer any more (#3741).
+      bash('echo rule-use: rule:adr-0004.md=steered')]
     const ledger: RuleLoadRow[] = [
       { rule: '.claude/rules/adr-0004.md', trigger: 'CLAUDE.md' }, // the main agent's: no agentId
       { rule: '.claude/rules/adr-0004.md', trigger: 'scripts/gate/gate.ts', agentId: 'a1' },
@@ -157,41 +98,25 @@ describe('ruleUse — subagents', () => {
     expect(ruleUseOf(entry)[0]).toEqual({
       by: 'general-purpose',
       subagent: 0,
-      answered: true,
+      answered: false,
       loads: [
         { rule: '.claude/rules/adr-0003.md', via: 'start' },
         { rule: '.claude/rules/adr-0004.md', via: 'native', trigger: 'scripts/gate/gate.ts' },
         { rule: '.claude/rules/adr-0017.md', via: 'native' },
       ],
-      reported: [
-        { path: '.claude/rules/adr-0003.md', value: 'duplicate', why: 'hook:' },
-        { path: '.claude/rules/adr-0004.md', value: 'steered' },
-        { path: 'docs/agents/pr-workflow.md' },
-        { path: '.claude/rules/adr-0099.md', value: 'unrelated', why: '(no load recorded)' },
-      ],
+      reported: [],
     })
     expect(validateEntry(entry).ok).toBe(true)
   })
 
-  it('does not mark a rule the agent read directly as unloaded', () => {
+  it('does not mark a rule the main agent read directly as unloaded', () => {
     const read = { type: 'assistant', message: { content: [{ type: 'tool_use', name: 'Read', input: { file_path: '/repo/.claude/rules/glassbox-content.md' } }] } }
-    const folded = foldSubagentTrace(main, [sub([note, read, bash('echo rule-use: rule:glassbox-content.md=steered')])], NO_ENV)
-    expect(ruleUseOf(stitch(authored({ reported: [] }), folded))[0]!.reported).toEqual([{ path: '.claude/rules/glassbox-content.md', value: 'steered' }])
+    const folded = foldSubagentTrace(main, [sub([read])], NO_ENV)
     const byMain = ruleUseOf(stitch(authored({ reported: [{ path: '.claude/rules/glassbox-content.md', value: 'steered' }] }), folded))[0]!
     expect(byMain).toMatchObject({ by: 'main', reported: [{ path: '.claude/rules/glassbox-content.md', value: 'steered', why: '(no load recorded)' }] })
     const own = extractTrace([cwd, read], NO_ENV)
     expect(ruleUseOf(stitch(authored({ reported: [{ path: '.claude/rules/glassbox-content.md', value: 'steered' }] }), own))[0]!.reported)
       .toEqual([{ path: '.claude/rules/glassbox-content.md', value: 'steered' }])
-  })
-
-  it('keeps the values a subagent reported', () => {
-    const folded = foldSubagentTrace(main, [sub([note, native('adr-0004.md'), bash('echo rule-use: rule:adr-0004.md=confirmed:agreed rule:adr-0099=missed:late')])], NO_ENV)
-    const entry = stitch(authored({ reported: [] }), folded)
-    expect(ruleUseOf(entry)[0]!.reported).toEqual([
-      { path: '.claude/rules/adr-0004.md', value: 'confirmed', why: 'agreed:' },
-      { path: '.claude/rules/adr-0099.md', value: 'missed', why: '(no load recorded) late:' },
-    ])
-    expect(validateEntry(entry).ok).toBe(true)
   })
 
   it('refuses a value that needs a word without one, and the retired backed, in a log', () => {
@@ -202,19 +127,16 @@ describe('ruleUse — subagents', () => {
     expect(validateEntry(entry([{ path: '.claude/rules/a.md', value: 'backed' }])).ok).toBe(true) // old logs stay valid
   })
 
-  it('records "nothing to report" (a bare call) apart from silence (no call)', () => {
-    const folded = foldSubagentTrace(main, [
-      sub([note, native('adr-0004.md'), bash('echo rule-use:')], 'a1'),
-      sub([note, native('adr-0004.md')], 'a2', 'Explore'),
-    ], NO_ENV)
-    const [none, silent] = ruleUseOf(stitch(authored({ reported: [] }), folded))
-    expect(none).toMatchObject({ by: 'general-purpose', answered: true, reported: [] })
-    expect(silent).toMatchObject({ by: 'Explore', answered: false, reported: [] })
+  it('still validates an old subagent entry that carries ratings', () => {
+    const old = { ...stitch(authored({ reported: [] }), extractTrace([cwd], NO_ENV)),
+      ruleUse: [{ by: 'Explore', subagent: 0, answered: true, loads: [{ rule: '.claude/rules/adr-0004.md', via: 'native' }], reported: [{ path: '.claude/rules/adr-0004.md', value: 'steered' }] }],
+      subagents: [{ type: 'Explore', task: 't' }] }
+    expect(validateEntry(old).ok).toBe(true)
   })
 
   it('counts a rule the agent read as a file as loaded, unless it loaded otherwise', () => {
     const read = (rule: string) => ({ type: 'assistant', message: { content: [{ type: 'tool_use', name: 'Read', input: { file_path: `/repo/.claude/rules/${rule}` } }] } })
-    const folded = foldSubagentTrace(main, [sub([note, read('glassbox-content.md'), read('adr-0004.md'), native('adr-0004.md'), always('adr-0003.md'), read('adr-0003.md')])], NO_ENV)
+    const folded = foldSubagentTrace(main, [sub([read('glassbox-content.md'), read('adr-0004.md'), native('adr-0004.md'), always('adr-0003.md'), read('adr-0003.md')])], NO_ENV)
     expect(ruleUseOf(stitch(authored({ reported: [] }), folded))[0]!.loads).toEqual([
       { rule: '.claude/rules/adr-0003.md', via: 'start' },
       { rule: '.claude/rules/adr-0004.md', via: 'native' },
@@ -222,36 +144,13 @@ describe('ruleUse — subagents', () => {
     ])
   })
 
-  it('counts a denied call as no answer', () => {
-    const call = { type: 'assistant', message: { content: [{ type: 'tool_use', id: 'tu-h', name: 'Bash', input: { command: 'echo rule-use:' } }] } }
-    const denied = { type: 'user', message: { content: [{ type: 'tool_result', tool_use_id: 'tu-h', is_error: true, content: 'Permission for this action was denied' }] } }
-    const folded = foldSubagentTrace(main, [sub([note, native('adr-0004.md'), call, denied])], NO_ENV)
-    expect(ruleUseOf(stitch(authored({ reported: [] }), folded))[0]).toMatchObject({ answered: false, reported: [] })
-  })
-
-  it('takes the last call when an agent answers twice', () => {
-    const folded = foldSubagentTrace(main, [sub([note, native('adr-0004.md'),
-      bash('echo rule-use:'), bash("echo 'rule-use:' 'rule:adr-0004.md=steered'")])], NO_ENV)
-    expect(ruleUseOf(stitch(authored({ reported: [] }), folded))[0]!.reported).toEqual([{ path: '.claude/rules/adr-0004.md', value: 'steered' }])
-  })
-
-  it('counts only an echo of the marker, not a command that names it', () => {
-    const folded = foldSubagentTrace(main, [sub([note, native('adr-0004.md'),
-      bash('grep -rn "rule-use:" scripts/session'), bash('echo "done; see rule-use: below"')])], NO_ENV)
-    expect(ruleUseOf(stitch(authored({ reported: [] }), folded))[0]).toMatchObject({ answered: false, reported: [] })
-    const run = foldSubagentTrace(main, [sub([note, bash('cd /repo && echo rule-use: doc:GLOSSARY.md')])], NO_ENV)
-    expect(ruleUseOf(stitch(authored({ reported: [] }), run))[0]).toMatchObject({ answered: true, reported: [{ path: 'GLOSSARY.md' }] })
-    const noisy = foldSubagentTrace(main, [sub([note, bash('echo done\necho rule-use: doc:GLOSSARY.md 2>&1 >/dev/null\necho bye')])], NO_ENV)
-    expect(ruleUseOf(stitch(authored({ reported: [] }), noisy))[0]).toMatchObject({ answered: true, reported: [{ path: 'GLOSSARY.md' }] })
-  })
-
-  it('leaves out a subagent that was never asked, never answered and loaded nothing', () => {
-    const folded = foldSubagentTrace(main, [sub([])], NO_ENV)
+  it('leaves out a subagent that loaded nothing, whatever it ran', () => {
+    const folded = foldSubagentTrace(main, [sub([bash('echo rule-use:')])], NO_ENV)
     expect(stitch(authored({ reported: [] }), folded)).not.toHaveProperty('ruleUse')
   })
 
   it("never gives a subagent with no agent id the main agent's triggers", () => {
-    const folded = foldSubagentTrace(main, [{ records: [cwd, note, native('adr-0004.md')], agent: { type: 'Explore' } }], NO_ENV, undefined,
+    const folded = foldSubagentTrace(main, [{ records: [cwd, native('adr-0004.md')], agent: { type: 'Explore' } }], NO_ENV, undefined,
       [{ rule: '.claude/rules/adr-0004.md', trigger: 'main.ts' }])
     expect(ruleUseOf(stitch(authored({ reported: [] }), folded))[0]!.loads).toEqual([{ rule: '.claude/rules/adr-0004.md', via: 'native' }])
   })
@@ -263,33 +162,26 @@ describe('ruleUse — subagents', () => {
     const parent = extractTrace([cwd, dispatch('tu-review', 'review'), dispatch('tu-lost', 'lost'), dispatch('tu-build', 'build')], NO_ENV)
     // Transcripts sort by agent id, not dispatch order (#3019).
     const folded = foldSubagentTrace(parent, [
-      { ...sub([note, bash('echo rule-use:')], 'a1'), toolUseId: 'tu-build' },
-      { ...sub([note, bash('echo rule-use: rule:adr-0027.md=steered')], 'a2'), toolUseId: 'tu-review' },
-      sub([note], 'w1', 'workflow-agent'),
+      { ...sub([native('adr-0004.md')], 'a1'), toolUseId: 'tu-build' },
+      { ...sub([native('adr-0027.md')], 'a2'), toolUseId: 'tu-review' },
+      sub([native('adr-0012.md')], 'w1', 'workflow-agent'),
     ], NO_ENV)
     const entry = stitch(authored({ reported: [] }), folded)
     const subagents = entry.subagents as { task: string }[]
-    const joined = (entry.ruleUse as (Entry & { subagent?: number })[]).map((e) => [subagents[e.subagent!]!.task, e.reported.map((r) => r.path)])
-    expect(joined).toEqual([['review', ['.claude/rules/adr-0027.md']], ['build', []], ['t', []]])
+    const joined = (entry.ruleUse as (Entry & { subagent?: number })[]).map((e) => [subagents[e.subagent!]!.task, e.loads.map((l) => l.rule)])
+    expect(joined).toEqual([['review', ['.claude/rules/adr-0027.md']], ['build', ['.claude/rules/adr-0004.md']], ['t', ['.claude/rules/adr-0012.md']]])
     expect(validateEntry(entry).ok).toBe(true)
-  })
-
-  it('keeps the loads of a subagent that was never asked, as unanswered', () => {
-    const folded = foldSubagentTrace(main, [sub([native('adr-0004.md')])], NO_ENV)
-    expect(ruleUseOf(stitch(authored({ reported: [] }), folded))).toEqual([
-      { by: 'general-purpose', subagent: 0, answered: false, loads: [{ rule: '.claude/rules/adr-0004.md', via: 'native' }], reported: [] },
-    ])
   })
 
   it('no longer writes rulesLoaded or rulesLoadedBySubagents', () => {
     const parent = extractTrace([cwd, native('adr-0012.md')], NO_ENV)
-    const entry = stitch(authored({ reported: [] }), foldSubagentTrace(parent, [sub([note, native('adr-0004.md')])], NO_ENV))
+    const entry = stitch(authored({ reported: [] }), foldSubagentTrace(parent, [sub([native('adr-0004.md')])], NO_ENV))
     expect(entry).not.toHaveProperty('rulesLoaded')
     expect(entry).not.toHaveProperty('rulesLoadedBySubagents')
   })
 
   it('counts a workflow agent with no type as `workflow`', () => {
-    const folded = foldSubagentTrace(main, [{ records: [cwd, note], agent: { task: 'triage #1' }, agentId: 'w1' }], NO_ENV)
+    const folded = foldSubagentTrace(main, [{ records: [cwd, native('adr-0004.md')], agent: { task: 'triage #1' }, agentId: 'w1' }], NO_ENV)
     expect(ruleUseOf(stitch(authored({ reported: [] }), folded))[0]!.by).toBe('workflow')
   })
 })
