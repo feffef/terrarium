@@ -235,7 +235,7 @@ useHead({ title: () => `${site.value?.title.replaceAll('`', '') ?? 'Not found'} 
 .midden-report__jump { display: inline-block; padding: 0.25rem 0; margin: 0.35rem 0 -0.05rem; }
 .midden-report__pager a { padding: 0.25rem 0; margin: -0.25rem 0; }
 .midden-report__finds { margin: 0.9rem 0 0; color: var(--midden-muted); }
-.midden-report__finds summary { cursor: pointer; color: var(--midden-faint); }
+.midden-report__finds summary { cursor: pointer; color: var(--midden-faint); padding: 0.25rem 0; margin: -0.25rem 0; }
 .midden-report__finds ol { margin: 0.5rem 0 0; padding-left: 1.4rem; font-family: var(--midden-serif); }
 .midden-report__finds li { margin: 0.2rem 0; }
 .midden-report__finds a { color: var(--midden-ink); }

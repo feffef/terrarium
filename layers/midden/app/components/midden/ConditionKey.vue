@@ -44,7 +44,8 @@ onMounted(() => {
 }
 .midden-key__head {
   cursor: pointer;
-  margin: 0;
+  padding: 0.25rem 0;
+  margin: -0.25rem 0;
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.14em;
