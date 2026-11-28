@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_013zxzePb2iHVgvh4p9Sa7hk
 startedAt: 2026-11-28T04:03:06Z
-endedAt: 2026-11-28T04:14:45Z
+endedAt: 2026-11-28T07:03:53Z
 kind: autonomous
 goal: Scheduled audit of the Platform's docs for drift and contradiction
-status: in-review
-outcome: Sweep PR 3737 merged (2 one-line fixes); ADR-0004 reference fix is open as PR 3738 awaiting a human merge
+status: completed
+outcome: Sweep PR 3737 and ADR-0004 escalation PR 3738 both merged
 summary: Scheduled audit-docs run, no human prompts. Three reviewers (Freshness, Single-home, Coherence) pooled 11 findings; one checker returned 3 confirmed or confirmed-with-correction, and the rest were wrong or needed an owner choice. One finding was dropped because an open prune trial covers pr-workflow.md. The sweep PR fixed the guards.md crash list and a clear-backlog reviewer name and was merged by this agent. The ADR-0004 repoint plus rule restamp was branched separately for a human merge. Reviewers read only part of their areas.
 prs:
   - "3737"
@@ -103,12 +103,12 @@ frictions:
   - description: Reviewer agents covered only a fraction of their assigned files, so most Live docs went unaudited this run.
     solution: Split each lens into several narrower reviewers by file area.
     severity: minor
-durationSec: 698
+durationSec: 10847
 models:
-  claude-sonnet-5-5: 83
+  claude-sonnet-5-5: 97
 toolCounts:
-  Bash: 26
-  Skill: 6
+  Bash: 27
+  Skill: 7
   Agent: 6
   Edit: 2
   Read: 3
@@ -116,6 +116,7 @@ toolCounts:
   mcp__github__subscribe_pr_activity: 2
   mcp__github__add_issue_comment: 1
   PushNotification: 1
+  ReadNotifications: 4
 filesEdited:
   - docs/agents/guards.md
   - .agents/skills/clear-backlog/SKILL.md
@@ -531,37 +532,37 @@ subagents:
     durationSec: 29
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 6.1
+    tokenShare: 5.1
   - type: general-purpose
     task: Audit-docs Agent B Single-home
     durationSec: 41
     toolCalls: 15
     modelCalls: 7
-    tokenShare: 7.9
+    tokenShare: 6.6
   - type: general-purpose
     task: Audit-docs Agent C Coherence
     durationSec: 196
     toolCalls: 43
     modelCalls: 23
-    tokenShare: 23.3
+    tokenShare: 19.5
   - type: general-purpose
     task: Audit-docs fact-checker
     durationSec: 145
     toolCalls: 34
     modelCalls: 31
-    tokenShare: 18.5
+    tokenShare: 15.5
   - type: general-purpose
     task: Code-review Standards axis
     durationSec: 22
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 2.9
+    tokenShare: 2.5
   - type: general-purpose
     task: Code-review ADR-0004 repoint
     durationSec: 16
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 2.4
+    tokenShare: 2
 gitBranch: claude/festive-mayer-qhg35m
 entrypoint: remote_trigger
 cliVersion: 2.1.332
