@@ -1,0 +1,3 @@
+term: Viewport
+definition: The area of the browser window a page is laid out in, measured in CSS pixels. A media query's width is the viewport's width.
+lesson: /t/glassbox/guide/web-standards/responsive-layout
