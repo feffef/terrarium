@@ -108,16 +108,18 @@ describe('midden Tenant', async () => {
     expect(html.match(/<a[^>]*midden-report__jump[^>]*>/)?.[0]).toContain(`href="#${listed[0]}"`)
   })
 
-  // WCAG 2.5.8 (#3522): the jump link and the pager links are tap targets.
-  it('keeps a dig report\'s jump and pager links at least 24px tall on a phone', async () => {
+  // WCAG 2.5.8 (#3522): the jump link, pager links and fold summaries are tap targets.
+  it('keeps a dig report\'s jump, pager and summary tap targets at least 24px tall on a phone', async () => {
     const page = await createPage()
     try {
       await page.setViewportSize({ width: 390, height: 844 })
       await page.goto(url('/t/midden/trench/the-generated-map'), { waitUntil: 'hydration' })
       const heights = await page
-        .locator('.midden-report__jump, .midden-report__pager a')
+        .locator(
+          '.midden-report__jump, .midden-report__pager a, .midden-report__finds summary, .midden-key__head',
+        )
         .evaluateAll((els) => els.map((el) => el.getBoundingClientRect().height))
-      expect(heights.length).toBe(4)
+      expect(heights.length).toBe(6)
       for (const h of heights) expect(h).toBeGreaterThanOrEqual(24)
     } finally {
       await page.close()

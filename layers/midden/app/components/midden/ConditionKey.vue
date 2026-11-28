@@ -42,9 +42,12 @@ onMounted(() => {
   border-top: 2px solid var(--midden-rule);
   padding-top: 0.85rem;
 }
+/* 24px tap target (WCAG 2.5.8): padding plus negative margin, no layout shift;
+   same technique as the dig-report page's jump link. */
 .midden-key__head {
   cursor: pointer;
-  margin: 0;
+  padding: 0.25rem 0;
+  margin: -0.25rem 0;
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.14em;
