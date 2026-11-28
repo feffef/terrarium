@@ -103,7 +103,7 @@ trials:
         - dispatch-subagents
         - subagent brief
     opened: 2026-11-28
-    proven: false
+    proven: true
     check: >
       Damage is a major or blocker Friction where a brief omitted a line the cut
       text carried (SHA pin, worktree isolation, commit-before-stop, foreground
