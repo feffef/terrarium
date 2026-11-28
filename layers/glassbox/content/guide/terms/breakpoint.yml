@@ -1,0 +1,3 @@
+term: Breakpoint
+definition: The width at which a page's layout changes, such as columns that stack below it and sit side by side above it. It is the value a media or container query tests.
+lesson: /t/glassbox/guide/web-standards/responsive-layout
