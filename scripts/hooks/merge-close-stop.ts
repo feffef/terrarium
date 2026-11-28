@@ -5,7 +5,9 @@
 //  - invoked `close-session` or ran `log-session.ts --author`, yet no authored
 //    scratch is on disk: `--author` refuses (exit 1, no scratch) on an
 //    incomplete log, and the landing hook then has nothing to land. The disk is
-//    checked, never a transcript claim (ADR-0009).
+//    checked, never a transcript claim; a scratch left by an earlier close in the
+//    same checkout still counts as present, so a later refused re-run slips by.
+//    A notice for a PR this session merged itself is not an owner merge.
 //
 // Usage:
 //   tsx scripts/hooks/merge-close-stop.ts   # hook: Stop payload on stdin
@@ -25,7 +27,8 @@ export function closureAttempted(records: Record<string, unknown>[]): boolean {
       if (b?.type !== 'tool_use') return false
       if (b.name === 'Skill') return b.input?.skill === 'close-session'
       const cmd = b.name === 'Bash' ? b.input?.command : undefined
-      return typeof cmd === 'string' && cmd.includes('log-session.ts') && cmd.includes('--author')
+      // A dry run or a read of the script writes no scratch, so it is no attempt.
+      return typeof cmd === 'string' && /\b(tsx|node)\b[^|;&\n]*log-session\.ts[^|;&\n]*--author/.test(cmd) && !cmd.includes('--dry-run')
     })
   })
 }

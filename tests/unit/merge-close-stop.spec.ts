@@ -58,6 +58,12 @@ describe('the Stop hook', () => {
       expect(JSON.parse(run(false, [rec])).decision).toBe('block')
       expect(run(false, [rec, close])).toBe('')
     })
+    it('ignores a notice for a PR this session merged itself, but not for an unknown PR', () => {
+      const notice = (n: number) => ({ type: 'user', message: { content: text.replace('#3693', `#${n}`) } })
+      expect(run(false, [merge, merged, close, notice(12)])).toBe('')
+      expect(JSON.parse(run(false, [merge, merged, close, notice(13)])).decision).toBe('block')
+      expect(JSON.parse(run(false, [close, notice(12)])).decision).toBe('block')
+    })
     it('ignores other events, closed-unmerged PRs and quoted text', () => {
       const other = text.replace('"outcome":"merged"', '"outcome":"closed"')
       expect(run(false, [{ type: 'user', message: { content: other } }])).toBe('')
@@ -72,6 +78,11 @@ describe('the Stop hook', () => {
         const out = JSON.parse(run(false, records, false))
         expect(out.decision).toBe('block')
         expect(out.reason).toContain('no log was written')
+      }
+    })
+    it('does not count a dry run or a read of the script as an attempt', () => {
+      for (const command of ['pnpm exec tsx scripts/session/log-session.ts --dry-run --author x.json', 'grep -n -- --author scripts/session/log-session.ts', 'cat scripts/session/log-session.ts | grep --author']) {
+        expect(run(false, [tool('Bash', { command })], false)).toBe('')
       }
     })
     it('passes when the scratch exists, when nothing attempted closure, or on a re-entered stop', () => {
