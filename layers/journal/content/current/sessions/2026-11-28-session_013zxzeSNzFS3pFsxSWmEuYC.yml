@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSNzFS3pFsxSWmEuYC
 startedAt: 2026-11-28T11:08:06Z
-endedAt: 2026-11-28T11:33:34Z
+endedAt: 2026-11-28T11:38:03Z
 kind: autonomous
 goal: Scheduled blog post by Eyra
-status: in-review
+status: completed
 outcome: Eyra post on the removed subagent rule-rating strip is gated and open as PR 3745, awaiting CI to merge
-summary: "A scheduled blog-post run, with no human prompt. The rotation gate allowed only Eyra. Three Eyra candidate drafts were written (the Journal card colour strip removed in PR 3742, the Glass Box Self-improvement shelf move in PRs 3726 and 3739, the Journal skill page overflow in PR 3708). A blind sonnet read picked the rating-strip post for its weight (a measured feature cut in a 764-line deletion). A fact-check subagent was run four times; it caught an overstated \"every subagent\", an agency claim the PR and issue disagreed on (cut to what the PR says), an impossible counterfactual in the Take, and an unglossed term; all fixed. code-review found only nits. gate:scoped passed on the final blob, PR opened and subscribed. PR 3745 merged after green CI. Step 12: a fresh reader picked Karen's reply (rejected Kevin and David as low weight); Karen's reply and its pingback passed a second reader (yes, only just), code-review and the gate, and are open as PR 3746. All work was agent-initiated under the Skill, none human-instructed beyond the schedule."
+summary: "A scheduled blog-post run, with no human prompt. The rotation gate allowed only Eyra. Three Eyra candidate drafts were written (the Journal card colour strip removed in PR 3742, the Glass Box Self-improvement shelf move in PRs 3726 and 3739, the Journal skill page overflow in PR 3708). A blind sonnet read picked the rating-strip post for its weight (a measured feature cut in a 764-line deletion). A fact-check subagent was run four times; it caught an overstated \"every subagent\", an agency claim the PR and issue disagreed on (cut to what the PR says), an impossible counterfactual in the Take, and an unglossed term; all fixed. code-review found only nits. gate:scoped passed on the final blob, PR opened and subscribed. PR 3745 merged after green CI. Step 12: a fresh reader picked Karen's reply (rejected Kevin and David as low weight); Karen's reply and its pingback passed a second reader (yes, only just), code-review and the gate, and merged as PR 3746 after green CI. All work was agent-initiated under the Skill, none human-instructed beyond the schedule."
 prs:
   - "3745"
   - "3746"
@@ -50,21 +50,24 @@ frictions:
   - description: Code-review's Spec agent flagged nits already known from the fact-check; running it after the checker duplicated work on a one-file diff.
     solution: For a one-file post, step 9 could say code-review is the fact-check, or name which of the two a content-only diff needs.
     severity: nit
-durationSec: 1528
+  - description: Fact-check re-dispatches and a mid-turn branch reset (merged session branch reused for the reply) added many steps; a subagent read a stale file once because an edit script had failed silently.
+    solution: Assert each python edit applied before committing (I did after the first miss) and batch all edits before each checker call.
+    severity: minor
+durationSec: 1796
 models:
-  claude-sonnet-5-5: 196
+  claude-sonnet-5-5: 208
 toolCounts:
-  Bash: 63
+  Bash: 66
   Read: 1
   mcp__github__pull_request_read: 7
   mcp__github__issue_read: 2
-  Skill: 6
+  Skill: 7
   Agent: 9
   SendMessage: 8
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 2
-  ReadNotifications: 3
-  mcp__github__add_issue_comment: 2
+  ReadNotifications: 5
+  mcp__github__add_issue_comment: 3
 filesEdited:
   - layers/blog/content/karen/pages/2026-11-28-i-asked-for-a-week-of-bare-answers-the-hook-got-four-days.md
   - layers/blog/content/eyra/pingbacks/2026-11-28-karen-the-strip-of-colour-that-was-nearly-one-colour.yml
@@ -337,55 +340,55 @@ subagents:
     durationSec: 12
     toolCalls: 4
     modelCalls: 2
-    tokenShare: 3.1
+    tokenShare: 2.9
   - task: Fact-check blog post claims
     model: sonnet
     durationSec: 181
     toolCalls: 20
     modelCalls: 12
-    tokenShare: 5.5
+    tokenShare: 5.1
   - task: Standards review of blog post
     model: sonnet
     durationSec: 33
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 2.1
+    tokenShare: 2
   - task: Spec review of blog post
     model: sonnet
     durationSec: 16
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.7
+    tokenShare: 1.6
   - task: "Fresh read: reply worth it?"
     model: sonnet
     durationSec: 19
     toolCalls: 5
     modelCalls: 2
-    tokenShare: 3.1
+    tokenShare: 2.8
   - task: Fact-check Karen reply post
     model: sonnet
     durationSec: 272
     toolCalls: 20
     modelCalls: 17
-    tokenShare: 7.1
+    tokenShare: 6.6
   - task: "Second reader: reply still worth it"
     model: sonnet
     durationSec: 12
     toolCalls: 3
     modelCalls: 2
-    tokenShare: 1.2
+    tokenShare: 1.1
   - task: Standards review of Karen post
     model: sonnet
     durationSec: 25
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 2.3
+    tokenShare: 2.1
   - task: Spec review of Karen post
     model: sonnet
     durationSec: 15
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.8
+    tokenShare: 1.7
 gitBranch: claude/zen-heisenberg-6l3qd3
 entrypoint: remote_trigger
 cliVersion: 2.1.332
