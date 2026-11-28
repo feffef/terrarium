@@ -370,6 +370,7 @@ export function sessionRuleUseView(s: SessionDoc, ruleTitles: Record<string, str
   }
 }
 
+// Subagent reporters stay for old logs, whose subagents rated rules and named docs (#3741).
 function docReport(entries: RuleUseEntry[], subagents: Subagent[], path: string): { reportedBy?: string; whys: string[] } {
   const by = entries.filter((e) => e.reported.some((r) => r.path === path))
   const nSubs = by.filter((e) => e.by !== 'main').length

@@ -25,8 +25,8 @@ describe('ruleUseReport', () => {
     expect(report.coverage).toEqual({ logs: 2, withRuleUse: 1 })
   })
 
-  it('gives the answered rate per agent type', () => {
-    expect(report.answered).toEqual({ main: { entries: 1, answered: 1 }, Explore: { entries: 2, answered: 1 } })
+  it('gives the answered rate for the main agent only', () => {
+    expect(report.answered).toEqual({ main: { entries: 1, answered: 1 } })
   })
 
   it('rates each rule over the answering agents that loaded it, flagging thin data', () => {
@@ -49,7 +49,7 @@ describe('ruleUseReport', () => {
     const main = ruleUseReport(parts.main, since)
     const subs = ruleUseReport(parts.subagents, since)
     expect(Object.keys(main.answered)).toEqual(['main'])
-    expect(Object.keys(subs.answered)).toEqual(['Explore'])
+    expect(subs.answered).toEqual({})
     expect(main.rules.find((r) => r.rule === A)).toMatchObject({ loads: 1, shares: { confirmed: 1 } })
     expect(subs.rules.find((r) => r.rule === A)).toMatchObject({ loads: 2, answeringLoads: 1, shares: { steered: 1 } })
   })

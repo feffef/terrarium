@@ -55,9 +55,12 @@ export function ruleUseReport(logs: SessionLog[], since: number): RuleUseReport 
   const via = { start: 0, native: 0, hint: 0, read: 0 }
   const quality = { noLoadRecorded: 0 }
   for (const e of entries) {
-    const a = (answered[e.by] ??= { entries: 0, answered: 0 })
-    a.entries++
-    if (e.answered) a.answered++
+    // A subagent no longer rates, so its answered rate would read as refusals (#3741).
+    if (e.by === 'main') {
+      const a = (answered.main ??= { entries: 0, answered: 0 })
+      a.entries++
+      if (e.answered) a.answered++
+    }
     for (const r of e.reported) if (r.why?.startsWith(NO_LOAD_WHY)) quality.noLoadRecorded++
     for (const l of e.loads) {
       const row = rows.get(l.rule) ?? { rule: l.rule, loads: 0, answeringLoads: 0, words: {}, enoughData: false, start: 0, native: 0, hint: 0, read: 0, triggers: {}, values: {} }
