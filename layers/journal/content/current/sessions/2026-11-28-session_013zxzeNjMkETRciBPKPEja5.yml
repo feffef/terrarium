@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeNjMkETRciBPKPEja5
 startedAt: 2026-11-28T14:38:00Z
-endedAt: 2026-11-28T15:34:36Z
+endedAt: 2026-11-28T15:47:04Z
 kind: interactive
 goal: "Clear the open issue backlog: triage, grill, build and review fixes"
-status: in-review
-outcome: "7 PRs opened; #3749 merged, six wait for a human merge; retro done"
-summary: "Owner started /clear-backlog. I swept 20 open issues, 9 were eligible (Seedlings and an agent-commented issue were skipped), and ran the explore workflow (agent-initiated, per the Skill): it labelled and commented on all 9. I then grilled the owner on 4 issues; the owner decided #3728 (build a Stop hook for a missing log), #3714 (extend the hook to owner merges), #3705 (name the Journal glossary in the Journal-writing Skills), parked #3729 until 2026-12-01 (title changed) and asked me to keep filing orphan issues. Five more issues were already ready-for-agent from explore (#3713, #3721, #3731, #3732, #3733), built without a pick from the owner. I merged #3728 and #3714 into one branch because both are Human-only and edit transcript-trace.ts; the owner had been told the default was separate PRs and heard about the change afterwards. The #3714 builder returned needs-owner for lack of a real notification record; I fetched one from session Po4m's events with a subagent instead of asking. Builds and reviews ran in a workflow, fixes and gates by resuming builders; reviews caught a real defect in two branches (a Skill line read by the wrong agent, and a --dry-run false positive in the new hook check) and only nits in the rest. Seven PRs opened (3748-3754). I merged #3749 (Midden tap targets, issue #3721 closed); the other six wait for the owner (Human-only paths, or Skill text no test observes). Open: the notification wrapper in a real Stop transcript is unverified (#3754). Worktrees removed; retro replies are in the frictions."
+status: completed
+outcome: "8 of 9 issues fixed and closed through 7 merged PRs; #3729 parked by the owner until 2026-12-01"
+summary: "Owner started /clear-backlog. I swept 20 open issues, 9 were eligible (Seedlings and an agent-commented issue were skipped), and ran the explore workflow (agent-initiated, per the Skill): it labelled and commented on all 9. I then grilled the owner on 4 issues; the owner decided #3728 (build a Stop hook for a missing log), #3714 (extend the hook to owner merges), #3705 (name the Journal glossary in the Journal-writing Skills), parked #3729 until 2026-12-01 (title changed; later told me the harvest run has no fixed budget cap, recorded on the issue) and asked me to keep filing orphan issues. Five more issues were already ready-for-agent from explore (#3713, #3721, #3731, #3732, #3733), built without a pick from the owner. I merged #3728 and #3714 into one branch because both are Human-only and edit transcript-trace.ts; the owner had been told the default was separate PRs and heard about the change afterwards. The #3714 builder returned needs-owner for lack of a real notification record; I fetched one from session Po4m's events with a subagent instead of asking. Builds and reviews ran in a workflow, fixes and gates by resuming builders; reviews caught a real defect in two branches (a Skill line read by the wrong agent, and a --dry-run false positive in the new hook check) and only nits in the rest. Seven PRs (3748-3754) were opened; I merged #3749 on my own once CI was green, and the owner then said to merge the rest, so I posted verdicts and merged the other six, three with --owner-approved for Human-only paths. GitHub closed only #3728 from the PR that named both issues, so I closed #3714 by hand. Worktrees removed; retro replies are in the frictions. Open: the notification wrapper in a real Stop transcript is unverified (#3754), and #3729 waits for 2026-12-01."
 prs:
   - "3748"
   - "3749"
@@ -197,24 +197,30 @@ frictions:
   - description: "Retro on review value: round 1 caught a defect in 2 of 7 branches (journal glossary line read by the wrong agent; --dry-run false positive in the new hook) and only nits elsewhere; the Spec and Standards reviewers of a 25-line gate change re-found two small nits."
     solution: Keep the review loop; the evidence shows it catches real defects on logic and Skill-structure changes. A skip for tiny diffs is unproven.
     severity: nit
-durationSec: 3396
+  - description: "PR 3754 said 'Closes #3728 and #3714'; GitHub closed only the first, so #3714 stayed open after the merge until I closed it by hand."
+    solution: "Give each issue its own keyword in a PR body, 'Closes #a, closes #b', or check each closed issue after a merge, as pr-workflow.md says."
+    severity: nit
+  - description: Read the 60 KB explore summary in two Read calls and re-read parts of each brief while building the PR bodies; the PR text needed only a few lines of each decisions.md.
+    solution: Have run-summary.ts --triage print a short per-issue digest (outcome, files, writes) and keep the long background in the file.
+    severity: nit
+durationSec: 4144
 models:
-  claude-sonnet-5-5: 229
+  claude-sonnet-5-5: 258
 toolCounts:
-  Bash: 55
+  Bash: 61
   Read: 14
-  Skill: 4
+  Skill: 5
   Workflow: 4
   ToolSearch: 4
   PushNotification: 3
   Grep: 12
-  mcp__github__issue_write: 4
-  mcp__github__add_issue_comment: 2
+  mcp__github__issue_write: 5
+  mcp__github__add_issue_comment: 10
   Agent: 1
   SendMessage: 31
   mcp__github__create_pull_request: 7
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  Write: 2
+  Write: 3
   ReadNotifications: 3
 filesEdited:
   - scripts/hooks/merge-close-stop.ts
@@ -1488,21 +1494,21 @@ subagents:
     durationSec: 974
     toolCalls: 88
     modelCalls: 58
-    tokenShare: 6.8
+    tokenShare: 6.5
   - type: general-purpose
     task: a2ac1f89dfe76062f
     model: claude-sonnet-5-5
     durationSec: 853
     toolCalls: 50
     modelCalls: 26
-    tokenShare: 3
+    tokenShare: 2.9
   - type: general-purpose
     task: a3854fda6ae20d718
     model: claude-sonnet-5-5
     durationSec: 412
     toolCalls: 35
     modelCalls: 20
-    tokenShare: 2.4
+    tokenShare: 2.3
   - type: general-purpose
     task: a3fe1692ced578902
     model: claude-sonnet-5-5
@@ -1516,14 +1522,14 @@ subagents:
     durationSec: 903
     toolCalls: 31
     modelCalls: 23
-    tokenShare: 3.1
+    tokenShare: 2.9
   - type: general-purpose
     task: a5db607868e95a660
     model: claude-sonnet-5-5
     durationSec: 964
     toolCalls: 32
     modelCalls: 22
-    tokenShare: 2.5
+    tokenShare: 2.4
   - type: general-purpose
     task: a7346572f1e946714
     model: claude-sonnet-5-5
@@ -1537,7 +1543,7 @@ subagents:
     durationSec: 1335
     toolCalls: 47
     modelCalls: 25
-    tokenShare: 4.7
+    tokenShare: 4.5
   - type: general-purpose
     task: a99f8bf133d070bcf
     model: claude-sonnet-5-5
@@ -1558,14 +1564,14 @@ subagents:
     durationSec: 395
     toolCalls: 10
     modelCalls: 8
-    tokenShare: 1.1
+    tokenShare: 1
   - type: general-purpose
     task: aa90d6dc57b9a2171
     model: claude-sonnet-5-5
     durationSec: 689
     toolCalls: 56
     modelCalls: 35
-    tokenShare: 4.6
+    tokenShare: 4.4
   - type: general-purpose
     task: aae016c95a67d1dfb
     model: claude-sonnet-5-5
@@ -1579,7 +1585,7 @@ subagents:
     durationSec: 186
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 0.8
+    tokenShare: 0.7
   - type: general-purpose
     task: ad0eb40fcbba61c26
     model: claude-sonnet-5-5
@@ -1607,7 +1613,7 @@ subagents:
     durationSec: 68
     toolCalls: 16
     modelCalls: 8
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: "triage #3705"
     model: claude-sonnet-5-5
@@ -1621,21 +1627,21 @@ subagents:
     durationSec: 87
     toolCalls: 24
     modelCalls: 11
-    tokenShare: 2
+    tokenShare: 1.9
   - type: workflow-subagent
     task: "triage #3713"
     model: claude-sonnet-5-5
     durationSec: 116
     toolCalls: 25
     modelCalls: 14
-    tokenShare: 2.1
+    tokenShare: 2
   - type: workflow-subagent
     task: "triage #3728"
     model: claude-sonnet-5-5
     durationSec: 206
     toolCalls: 47
     modelCalls: 21
-    tokenShare: 3.2
+    tokenShare: 3.1
   - type: workflow-subagent
     task: "triage #3721"
     model: claude-sonnet-5-5
@@ -1649,21 +1655,21 @@ subagents:
     durationSec: 113
     toolCalls: 29
     modelCalls: 11
-    tokenShare: 2.6
+    tokenShare: 2.5
   - type: workflow-subagent
     task: "triage #3732"
     model: claude-sonnet-5-5
     durationSec: 91
     toolCalls: 21
     modelCalls: 10
-    tokenShare: 1.7
+    tokenShare: 1.6
   - type: workflow-subagent
     task: "triage #3731"
     model: claude-sonnet-5-5
     durationSec: 142
     toolCalls: 22
     modelCalls: 12
-    tokenShare: 1.7
+    tokenShare: 1.6
   - type: workflow-subagent
     task: Spec stop-hook-closure r1
     model: claude-sonnet-5-5
@@ -1705,21 +1711,21 @@ subagents:
     durationSec: 147
     toolCalls: 42
     modelCalls: 24
-    tokenShare: 2.5
+    tokenShare: 2.4
   - type: workflow-subagent
     task: build dispatch-guard-symlink
     model: claude-sonnet-5-5
     durationSec: 135
     toolCalls: 33
     modelCalls: 17
-    tokenShare: 1.7
+    tokenShare: 1.6
   - type: workflow-subagent
     task: build journal-glossary-first-read
     model: claude-sonnet-5-5
     durationSec: 63
     toolCalls: 24
     modelCalls: 12
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: Both glassbox-curate-index-read-essential r1
     model: claude-sonnet-5-5
@@ -1733,7 +1739,7 @@ subagents:
     durationSec: 101
     toolCalls: 24
     modelCalls: 17
-    tokenShare: 2
+    tokenShare: 1.9
   - type: workflow-subagent
     task: build glassbox-curate-index-read-essential
     model: claude-sonnet-5-5
@@ -1747,14 +1753,14 @@ subagents:
     durationSec: 15
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 0.5
+    tokenShare: 0.4
   - type: workflow-subagent
     task: build gate-rules-not-inert
     model: claude-sonnet-5-5
     durationSec: 112
     toolCalls: 32
     modelCalls: 15
-    tokenShare: 2
+    tokenShare: 1.9
   - type: workflow-subagent
     task: Spec midden-summary-tap-targets r1
     model: claude-sonnet-5-5
@@ -1775,7 +1781,7 @@ subagents:
     durationSec: 226
     toolCalls: 36
     modelCalls: 21
-    tokenShare: 2.7
+    tokenShare: 2.6
   - type: workflow-subagent
     task: Standards gate-rules-not-inert r1
     model: claude-sonnet-5-5
@@ -1803,11 +1809,12 @@ subagents:
     durationSec: 19
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 1
+    tokenShare: 0.9
 gitBranch: ccr-76e63ab1-6wn0ic
 entrypoint: remote_mobile
 cliVersion: 2.1.332
 learnings:
   - A GitHub merge notice reaches list_events as an other-kind event with internal_anthropic_catchall.notification.type queued_notification, whose content is a wake envelope with kind pull_request.closed and outcome merged; the transcript wrapper Claude Code writes for the hook is unverified.
   - A subscribed PR's merge arrives as a wake envelope with kind pull_request.closed and outcome merged in the session's context; merge-pr.ts then prints merged true and the issue closes through the Closes keyword.
+  - "GitHub closes only the first issue of a 'Closes #a and #b' list in a PR body; each needs its own closing keyword."
 landedBy: Stop
