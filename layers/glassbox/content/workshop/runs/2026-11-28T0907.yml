@@ -1,7 +1,9 @@
 session: session_013zxzeSYNKHAFBxfHPQi9Qb
 mode: autonomous
 focus: "Verification: Usability testing, a wording weak spot on the memory page (the run, the brief and the lens come before a gloss in In Terrarium). No open Glass Box PR touches it (PR 3743 adds a Lesson in web standards and edits other Where next lists). Run two of one session."
-changes: []
+changes:
+  - "verification/85.usability-testing | Wording only: 'run' is introduced where the skill is first described, 'brief' and 'lens' are glossed and a lens is said to set a visitor's access, the skill is said to write the context file, 'tally' becomes 'list', and the lede and the ideas sentence now say only bugs are checked and that ideas and learnings go to the run's session log | a fresh reader found these words used before they were explained and one lede claim (the skill checks everything before it becomes work) that contradicted the ideas sentence. The claim check called the first rewrite of that lede overstated (the skill also drops ideas that match an owner ruling or a recent log), so it now says ideas and learnings that survive its filter. Revision and publishedAt kept. Fresh-reader wishes to define 'qualitative' and 'learning' and to point to What to watch for are not false and are left"
+  - workshop/pages/index | The Usability testing wording item deleted | solved
 pagesRead:
   - verification/10.merge-gate
   - verification/20.type-checking
