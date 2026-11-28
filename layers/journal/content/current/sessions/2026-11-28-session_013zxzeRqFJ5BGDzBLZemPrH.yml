@@ -1,0 +1,232 @@
+schemaVersion: 1
+session: session_013zxzeRqFJ5BGDzBLZemPrH
+startedAt: 2026-11-28T07:21:06Z
+endedAt: 2026-11-28T07:32:24Z
+kind: interactive
+goal: Move House rules and Self-improvement up in the Glass Box subject list
+status: in-review
+outcome: Reordered two Glass Box subjects; PR 3739 open, reviewed, gate green, waiting for the owner's merge
+summary: "The owner asked whether Self-improvement and House rules should sit higher in the Glass Box subject list, since they are what the platform adds on top of existing tools, and asked where I would place them. I first answered from one grep and subjects.ts; the owner then twice told me to orient properly and to use the real orient.ts script (human-instructed). After running it with --index and reading the three guide index files, I recommended positions 5 and 6 (House rules, then Self-improvement) right after Installed Skills, because the lessons link forward and back in loops, the overview already puts who-decides and how-it-improves before the stack, and putting them first would quietly name a starting point against the glossary. The owner said go (human green-light to build) and later ok (confirming the sidebar sample). Agent-initiated: the exact placement, the two read-only reviewer subagents, committing and pushing when the Stop hook asked, and opening the PR and subscribing to it without asking, as ADR-0003 and CLAUDE.md say once review and the gate pass. I wrongly told the owner subjects.ts was not Human-only; the human-merge rule loaded when I edited it and I corrected the claim, so the PR says it waits for a human merge. Still open: the owner's merge."
+prs:
+  - "3739"
+docsRead:
+  - path: layers/glassbox/app/utils/subjects.ts
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/index.md
+    reason: (no reason given)
+  - path: layers/glassbox/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/glassbox/tests/unit/subjects.spec.ts
+    reason: (no reason given)
+  - path: layers/glassbox/app/utils/page-nav.ts
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-curate/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-curate/scripts/orient.ts
+    reason: (no reason given)
+  - path: .throwaway/glassbox-curate/guide-pages-1.md
+    reason: (no reason given)
+  - path: .throwaway/glassbox-curate/guide-pages-2.md
+    reason: (no reason given)
+  - path: .throwaway/glassbox-curate/guide-pages-3.md
+    reason: (no reason given)
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: briefed the Standards and Spec reviewers
+  - name: code-review
+    reason: two-axis review of the one-commit diff before the PR
+  - name: close-session
+    reason: closure after opening PR 3739
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Answered how Glass Box orders subjects from one grep and subjects.ts; the owner twice had to tell me to orient properly and run orient.ts, costing two corrective turns and a revised answer.
+    solution: CLAUDE.md's read-first overview trigger, or the glassbox-content rule, should name orient.ts --index for Glass Box questions; it is only named inside glassbox-* Skills I had not loaded.
+    severity: moderate
+  - description: Told the owner subjects.ts was not Human-only after grepping the human-merge rule for the word glassbox, though its paths are globs; also miscounted two positions as 6 and 7 instead of 5 and 6.
+    solution: Run the list-human-only-paths.ts script instead of grepping the rule, and count items from the file before stating a position; both claims were corrected before the PR.
+    severity: minor
+  - description: Launched pnpm gate:scoped in the same batch as reading pr-workflow.md, so it ran before code-review, against that doc's order of review then gate; the head did not change, so no rerun.
+    solution: Read pr-workflow.md before launching anything, or have the ADR-0004 rule state the order review, then gate.
+    severity: nit
+  - description: pr-workflow step 1 asks which test fails if the change regresses; none would, since subjects.spec.ts does not pin the real subject order, and I did not add one.
+    solution: Accept it as a known gap for an order-only change, or let pr-workflow say an order-only edit needs no test; the PR already waits for a human merge.
+    severity: nit
+durationSec: 678
+models:
+  claude-sonnet-5-5: 107
+toolCounts:
+  Grep: 5
+  Glob: 2
+  Read: 17
+  Bash: 19
+  Edit: 1
+  Write: 2
+  ToolSearch: 1
+  Skill: 4
+  mcp__github__list_pull_requests: 1
+  Agent: 2
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - layers/glassbox/app/utils/subjects.ts
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleUse:
+  - by: main
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: native
+        trigger: layers/glassbox/app/utils/subjects.ts
+      - rule: .claude/rules/tenant-layers.md
+        via: native
+        trigger: layers/glassbox/app/utils/subjects.ts
+      - rule: .claude/rules/glassbox-content.md
+        via: native
+        trigger: layers/glassbox/content/guide/pages/index.md
+      - rule: .claude/rules/adr-0021.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/glossary-terms.md
+        via: native
+        trigger: layers/glassbox/GLOSSARY.md
+      - rule: .claude/rules/adr-0027.md
+        via: native
+        trigger: .agents/skills/glassbox-curate/SKILL.md
+      - rule: .claude/rules/adr-0005.md
+        via: native
+        trigger: .agents/skills/glassbox-curate/SKILL.md
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: native
+        trigger: .claude/rules/ui-verification.md
+      - rule: .claude/rules/adr-0029.md
+        via: native
+        trigger: .claude/rules/ui-verification.md
+      - rule: .claude/rules/ui-verification.md
+        via: read
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: steered
+        why: ran code-review and gate:scoped before the PR
+      - path: .claude/rules/adr-0009.md
+        value: duplicate
+        why: "hook: PostToolUse hint said invoke close-session"
+      - path: .claude/rules/adr-0003.md
+        value: steered
+        why: opened PR unasked, subscribed to it
+      - path: .claude/rules/adr-0017.md
+        value: steered
+        why: header on PR body, checked trailer landed
+      - path: .claude/rules/tenant-glossary.md
+        value: in-scope
+      - path: .claude/rules/tenant-layers.md
+        value: in-scope
+      - path: .claude/rules/glassbox-content.md
+        value: unrelated
+      - path: .claude/rules/adr-0021.md
+        value: unrelated
+      - path: .claude/rules/glossary-terms.md
+        value: unrelated
+      - path: .claude/rules/adr-0027.md
+        value: unrelated
+      - path: .claude/rules/adr-0005.md
+        value: unrelated
+      - path: .claude/rules/adr-0004-human-merge.md
+        value: steered
+        why: corrected my claim, PR says human merge
+      - path: .claude/rules/adr-0029.md
+        value: unrelated
+      - path: .claude/rules/ui-verification.md
+        value: steered
+        why: dev sample confirmed before review and PR
+      - path: layers/glassbox/GLOSSARY.md
+      - path: .agents/skills/glassbox-curate/SKILL.md
+      - path: docs/agents/git-conventions.md
+      - path: docs/agents/verifying-ui-changes.md
+      - path: docs/agents/pr-workflow.md
+      - path: docs/agents/github-integration.md
+  - by: general-purpose
+    subagent: 0
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/adr-0004-human-merge.md
+        via: hint
+      - rule: .claude/rules/adr-0029.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+    reported: []
+  - by: general-purpose
+    subagent: 1
+    answered: true
+    loads:
+      - rule: .claude/rules/adr-0004.md
+        via: start
+      - rule: .claude/rules/adr-0009.md
+        via: start
+      - rule: .claude/rules/adr-0003.md
+        via: start
+      - rule: .claude/rules/adr-0017.md
+        via: start
+      - rule: .claude/rules/tenant-glossary.md
+        via: hint
+      - rule: .claude/rules/glossary-terms.md
+        via: hint
+    reported:
+      - path: .claude/rules/adr-0004.md
+        value: unrelated
+      - path: .claude/rules/adr-0009.md
+        value: unrelated
+      - path: .claude/rules/adr-0003.md
+        value: unrelated
+      - path: .claude/rules/adr-0017.md
+        value: unrelated
+subagents:
+  - type: general-purpose
+    task: Standards review of subject reorder
+    durationSec: 20
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 9.6
+  - type: general-purpose
+    task: Spec review of subject reorder
+    durationSec: 21
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 9.7
+gitBranch: claude/confident-turing-95pors
+entrypoint: remote
+cliVersion: 2.1.332
+learnings:
+  - A human-merge rule's paths are globs, so grepping it for a Tenant name cannot show whether a file is Human-only; the rule loads on touching one.
+landedBy: Stop
