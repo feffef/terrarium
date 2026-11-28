@@ -4,14 +4,14 @@ export const glassboxSubjects = [
   { slug: 'hooks', name: 'Hooks' },
   { slug: 'agents', name: 'Agents & automation' },
   { slug: 'skill-pack', name: 'Installed Skills' },
+  { slug: 'terrarium-practice', name: 'House rules' },
+  { slug: 'self-improvement', name: 'Self-improvement' },
   { slug: 'nuxt-vue', name: 'Nuxt & Vue' },
   { slug: 'nuxt-content', name: 'Nuxt Content' },
   { slug: 'verification', name: 'Verification' },
   { slug: 'web-standards', name: 'Web standards' },
   { slug: 'git-github', name: 'Git & GitHub' },
   { slug: 'deploy', name: 'Deploy' },
-  { slug: 'self-improvement', name: 'Self-improvement' },
-  { slug: 'terrarium-practice', name: 'House rules' },
 ] as const
 
 export interface GlassboxPageLink {
