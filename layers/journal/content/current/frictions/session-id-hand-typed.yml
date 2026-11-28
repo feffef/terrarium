@@ -156,3 +156,8 @@ occurrences:
     severity: minor
     description: "Drafted two issue bodies with a session id I had not looked up, then caught it before posting by calling get_session."
     solution: "Print the session id once at the start (get_session) and paste from it; the system prompt's commit template gives it."
+  - session: session_013zxzeSL3eQmU15DFjqDwqw
+    date: "2026-11-27"
+    severity: nit
+    description: "Typed the session id from memory into a commit message and got it wrong; caught by calling get_session before committing."
+    solution: "Have log-session --pending or the commit-msg hook print the id ready to paste, so nobody types it."

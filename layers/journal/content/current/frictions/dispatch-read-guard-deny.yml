@@ -206,3 +206,13 @@ occurrences:
     severity: minor
     description: "Wrote two subagent briefs before reading the dispatch-subagents Skill; the dispatch-read guard blocked both calls and I had to retry."
     solution: "code-review's SKILL.md step 4 should name dispatch-subagents, so the read happens before the first brief."
+  - session: session_013zxzePYUBsXDVMueBkH5Ax
+    date: "2026-11-27"
+    severity: nit
+    description: "Wrote the Scout subagent brief before reading dispatch-subagents as CLAUDE.md requires; the dispatch-read guard blocked the first Agent call and cost one retry."
+    solution: "Read dispatch-subagents at the start of any run whose Skill dispatches subagents, or name it in the glassbox-update Skill step 3."
+  - session: session_013zxzeQ3rmR3XHfvXpobcpr
+    date: "2026-11-27"
+    severity: nit
+    description: "First dispatch of the blind reader was blocked because I read the dispatch-subagents Skill through the .claude/skills path, not the .agents/skills path the guard checks."
+    solution: "Make the dispatch-read guard accept the .claude/skills symlink path too."

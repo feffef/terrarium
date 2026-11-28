@@ -57,3 +57,8 @@ occurrences:
     severity: minor
     description: "Spec review found I swapped two Where next rows without reading those pages whole and skipped a walkthrough chip until reviewed; the Skill's step 3 reading rule for outside pages is easy to under-do."
     solution: "Have step 3 list linked outside pages with a checkbox before writing, and the writer brief name walkthroughs that describe the mechanism."
+  - session: session_013zxzeSL3eQmU15DFjqDwqw
+    date: "2026-11-27"
+    severity: nit
+    description: "Never read writing-pages.md, which curate step 1 requires for any change to a guide page; only listed its path in a command."
+    solution: "Name writing-pages.md in the glassbox-content rule so it loads when guide pages are touched."

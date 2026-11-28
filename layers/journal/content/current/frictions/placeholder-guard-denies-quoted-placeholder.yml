@@ -71,3 +71,8 @@ occurrences:
     severity: nit
     description: "The dispatch-read guard refused my survey brief for the literal scratch-directory placeholder name; I reworded and resent, one wasted call."
     solution: "Fill the placeholder in the Skill's dispatch step or let the guard allow a named reference."
+  - session: session_013zxzeRF9wSXqBPZvCnNxKb
+    date: "2026-11-27"
+    severity: nit
+    description: "The Agent call was denied because my brief named the unfilled scratch placeholder in prose; I reworded and resent."
+    solution: "Fill every placeholder before the call, never name one."

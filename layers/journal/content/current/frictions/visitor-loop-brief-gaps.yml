@@ -82,3 +82,8 @@ occurrences:
     severity: minor
     description: "Context file listed /t/journal/current/digests as a page; it and /sessions return 404, costing the editor two visits and a finding."
     solution: ".agents/skills/visitor-loop/SKILL.md step 2: say a Space or folder root that has no index (digests, sessions) is not a page; list only URLs that return 200."
+  - session: session_013zxzeRAtiER4WiBiS7UMsb
+    date: "2026-11-27"
+    severity: nit
+    description: "The visitor brief gives no launchChromium sample, so informed visitors spent an extra call reading scripts/lib/chromium.ts; the UI tester also ran two cd commands against the brief's never-cd rule."
+    solution: "Add a ten-line walk.ts example to .agents/skills/visitor-loop/visitor-brief.md and say how to read scratch files without cd."

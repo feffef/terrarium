@@ -36,3 +36,8 @@ occurrences:
     severity: minor
     description: "A prune-friction-ledger --move of a cluster's only occurrence silently deleted the entry with its fixes and notes; the survey agent had to restore it from git."
     solution: "Have --move refuse or warn when the source entry would end empty."
+  - session: session_013zxzeRF9wSXqBPZvCnNxKb
+    date: "2026-11-27"
+    severity: nit
+    description: "The survey agent's commit message miscounted its appends (68 and 44 against 65 and 39 plus 3 new entries), and the Standards reviewer wrongly reported an unchanged status; I verified both against the diff."
+    solution: "Have the survey cite counts from git diff, not from its own tally."

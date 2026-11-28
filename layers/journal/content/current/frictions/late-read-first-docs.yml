@@ -575,3 +575,28 @@ occurrences:
     severity: nit
     description: "Ran gh api issue searches before reading github-integration.md; the hook then reminded me, so the doc was read after the first GitHub operation."
     solution: "Read the GitHub docs in step 4 of audit-skills before the issue searches; the Skill could name them there."
+  - session: session_013zxzeRF9wSXqBPZvCnNxKb
+    date: "2026-11-27"
+    severity: nit
+    description: "Filed two issues before reading docs/agents/triage-labels.md, which CLAUDE.md requires before filing; a hook then reminded me. needs-triage was the label anyway."
+    solution: "Read triage-labels.md together with issue-tracker.md before the first issue_write."
+  - session: session_013zxzeRAtiER4WiBiS7UMsb
+    date: "2026-11-27"
+    severity: nit
+    description: "I ran git checkout --detach and back before reading docs/agents/git-conventions.md, and ran list-open-issues before github-integration.md; the checkout was pointless since HEAD already equalled origin/main."
+    solution: "Skip the checkout when HEAD equals origin/main; read the git doc before any non-read-only git command."
+  - session: session_013zxzeP4F3aYSUT97sA7pou
+    date: "2026-11-27"
+    severity: nit
+    description: "Read git-adjacent history and made GitHub reads and writes before docs/agents/git-conventions.md and github-integration.md; hooks reminded me afterwards."
+    solution: "Read both docs at run start when the Skill will file issues."
+  - session: session_013zxzePtpYfD71WKEC9Henf
+    date: "2026-11-28"
+    severity: nit
+    description: "Ran digest list and gather (and a fetching PR listing) before reading git-conventions.md; hook flagged it afterwards. No wrong result followed."
+    solution: "Read git-conventions.md at the start of any scheduled run that fetches."
+  - session: session_013zxzeQi2wG6G8UMWa2bHxB
+    date: "2026-11-28"
+    severity: nit
+    description: "Ran git log and GitHub reads before reading git-conventions.md and github-integration.md; the hooks reminded me and the calls were fine."
+    solution: "Read both docs first, or accept the read-only exemption the hook already knows."

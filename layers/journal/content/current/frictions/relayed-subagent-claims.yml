@@ -123,3 +123,8 @@ occurrences:
     severity: minor
     description: "One agent returned a report that its own scorecard mislabelled (StkfK as a non-user); checking it cost extra reads of the log."
     solution: "Brief agents to cite file and line for every claimed hole, as the log-session agent partly did."
+  - session: session_013zxzeQi2wG6G8UMWa2bHxB
+    date: "2026-11-28"
+    severity: minor
+    description: "Copied a harvest commit sha (2dc4441d7) from a subagent report into a note without checking it; the Spec reviewer found it wrong and I had to fix and re-gate."
+    solution: "Check each commit id a subagent cites against git before writing it into a note."

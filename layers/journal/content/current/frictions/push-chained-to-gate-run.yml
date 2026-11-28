@@ -45,3 +45,8 @@ occurrences:
     severity: nit
     description: "Pushed the follow-up commit while its gate:scoped run was still going, after a Stop hook asked; pr-workflow says to push a head only after the gate passed. CI ran in parallel and nothing broke."
     solution: "Have the Stop hook skip its push request while a background gate or e2e run is still active."
+  - session: session_013zxzeQUGwaWUa1tvt7hn43
+    date: "2026-11-27"
+    severity: nit
+    description: "I chained a git commit with a background gate:scoped run in one Bash call, against git-conventions; the commit landed and the gate passed anyway."
+    solution: "Commit in its own Bash call, check it, then start the gate separately."

@@ -46,3 +46,8 @@ occurrences:
     severity: minor
     description: "The Skill's step 8 loops to the next run, but a single turn cannot wait for CI between runs, so the session stopped after one run and PR."
     solution: "Say in the Skill how a scheduled one-turn run should end when the first PR is still waiting on checks and the owner."
+  - session: session_013zxzeR9wuoRUezpWhAdNaL
+    date: "2026-11-27"
+    severity: minor
+    description: "Skill step 3 asks for every Subject page in full and steps 4 and 6 for a fresh reader and claim checker; I skipped them because only link paths changed, though rule 7 says no step is skipped."
+    solution: "State in the Skill which steps apply to a rename-only run, so a run need not judge it."

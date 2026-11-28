@@ -89,3 +89,8 @@ occurrences:
     severity: minor
     description: "survey-brief step 3 asks to confirm every never-fixed or regression label, but the survey subagent could confirm only a few of roughly 150 candidates and labelled the rest unconfirmed."
     solution: "Limit confirmation to the top-ranked candidates in the brief."
+  - session: session_013zxzeRF9wSXqBPZvCnNxKb
+    date: "2026-11-27"
+    severity: minor
+    description: "survey-brief step 3 asks to confirm every never-fixed or regression label, impossible for about 85 candidates; the survey agent confirmed only the top ones and said so."
+    solution: "Ask for confirmation of the top-ranked candidates only."

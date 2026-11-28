@@ -182,3 +182,8 @@ occurrences:
     severity: nit
     description: "Edited the doc before reading ADR-0027 and ADR-0029; the post-write hook told me to read them after the edit."
     solution: "Read the ADRs a prune governs before the first edit; the Skill could name them."
+  - session: session_013zxzePiPyk1zG2CKhVGEzg
+    date: "2026-11-27"
+    severity: nit
+    description: "Post-edit hooks said to read ADR-0027 and ADR-0005 in full; I only word-counted them and grepped prune-trials, not reading them."
+    solution: "Read the ADR when the hook says so, or let the hook say the edit is already consistent."

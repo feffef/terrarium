@@ -172,3 +172,8 @@ occurrences:
     severity: minor
     description: "Started pnpm gate:scoped with both run_in_background and a trailing ampersand; the double-background guard blocked it and the chained commit did not run, so I redid the commit."
     solution: "Pass run_in_background alone, never a text-level ampersand."
+  - session: session_013zxzeRF9wSXqBPZvCnNxKb
+    date: "2026-11-27"
+    severity: nit
+    description: "A Bash call with run_in_background plus a trailing & was denied by the double-background guard; resent plainly."
+    solution: "Pass run_in_background alone."

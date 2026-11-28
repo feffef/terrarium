@@ -96,3 +96,13 @@ occurrences:
     severity: nit
     description: "A subagent's trial-entry word count (1,112) was copied into the Digest; the fact-check caught that a later commit made it 1,120. I should have run wc on the merged file."
     solution: "Take counts from the merged file, not a PR's own notes."
+  - session: session_013zxzeR9wuoRUezpWhAdNaL
+    date: "2026-11-27"
+    severity: nit
+    description: "My first run-entry counts (44 files) and its 'no text change' claim were wrong; I wrote them before counting with git diff."
+    solution: "Count with git diff --name-status before writing numbers into a run entry, as CLAUDE.md's verify-before-you-state says."
+  - session: session_013zxzePtpYfD71WKEC9Henf
+    date: "2026-11-28"
+    severity: nit
+    description: "Copied 'five pushes' from session friction text into the Digest; the fact-check found six red runs. Caught before landing."
+    solution: "Verify a count against CI runs, not a session log's wording."

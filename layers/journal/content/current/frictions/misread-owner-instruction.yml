@@ -74,3 +74,8 @@ occurrences:
     severity: minor
     description: "The owner's single reply 'Sounds good' covered two questions; I took it as a yes to the PR and left the length unchanged, rather than asking again."
     solution: "Re-ask the unanswered question (lengthen the body?) before treating the reply as settled."
+  - session: session_013zxzeSL3eQmU15DFjqDwqw
+    date: "2026-11-27"
+    severity: minor
+    description: "The owner's reply picked neither of my two sub-choices (glossary and exemption edit, page order), yet I built on my recommendations; CLAUDE.md says ask again or hold."
+    solution: "Ask each open question again in one line before building, or build only the part that does not depend on them."

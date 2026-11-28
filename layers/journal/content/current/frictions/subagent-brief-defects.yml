@@ -133,3 +133,8 @@ occurrences:
     severity: minor
     description: "Retro (builder): my brief named list-human-only-paths.ts without its path, so the builder looked under scripts/hooks, wrongly reported it missing and needed a correction round."
     solution: "Briefs in clear-backlog-build.js should give the script's full path .agents/skills/clear-backlog/scripts/list-human-only-paths.ts."
+  - session: session_013zxzeQ3rmR3XHfvXpobcpr
+    date: "2026-11-27"
+    severity: nit
+    description: "Briefed the step 12 reader with a path to a Kevin-post copy I never created, so it judged the replies without the post; I only saw this in its report and re-judged with a second reader."
+    solution: "Have the blog-post Skill's step 12 brief point at the merged post's repo path, not a scratch copy."

@@ -273,3 +273,23 @@ occurrences:
     severity: minor
     description: "Wrote 14 Inventory notes without reading layers/journal/GLOSSARY.md, which the tenant-glossary rule asks for before Journal work; no term error was found afterwards."
     solution: "Name the Journal glossary in audit-skills step 5, as earlier audits already suggest."
+  - session: session_013zxzeQ3rmR3XHfvXpobcpr
+    date: "2026-11-27"
+    severity: minor
+    description: "Wrote the post into layers/blog by Bash heredoc without reading layers/blog/GLOSSARY.md first, so the Tenant glossary guard (which watches Edit and Write) never fired."
+    solution: "Have the blog-post Skill's step 7 say to read the Blog glossary before saving; or make the guard also see Bash writes under layers/."
+  - session: session_013zxzeSL3eQmU15DFjqDwqw
+    date: "2026-11-27"
+    severity: minor
+    description: "Edited layers/glassbox/GLOSSARY.md after reading only parts of it and without docs/agents/domain.md, though the glossary-terms rule had loaded before the edit."
+    solution: "Read the Tenant glossary whole before editing it; make the rule's read trigger visible when a glossary file is first read."
+  - session: session_013zxzePtpYfD71WKEC9Henf
+    date: "2026-11-28"
+    severity: nit
+    description: "Wrote and edited the Digest under layers/journal before reading layers/journal/GLOSSARY.md; the glossary was read only at review time."
+    solution: "Digest Skill step 3 could name the Journal glossary as a read-first."
+  - session: session_013zxzeQi2wG6G8UMWa2bHxB
+    date: "2026-11-28"
+    severity: minor
+    description: "Wrote 14 Journal Inventory notes and summaries without reading layers/journal/GLOSSARY.md, which the tenant-glossary rule asks for."
+    solution: "Name the Journal glossary in audit-skills step 5 (issue #3705 covers the late-rule problem)."

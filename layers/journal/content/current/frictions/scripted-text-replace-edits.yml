@@ -44,3 +44,8 @@ occurrences:
     severity: nit
     description: "A sed edit meant to fix two words changed a third phrase and left an ambiguous 'its'; I had to edit again and amend."
     solution: "Use Edit with exact strings for prose fixes."
+  - session: session_013zxzeQi2wG6G8UMWa2bHxB
+    date: "2026-11-28"
+    severity: nit
+    description: "Wrapped the notes with textwrap, which split hyphenated words at line ends and failed validate:content; had to rejoin the lines."
+    solution: "An append-observation script (idea below) would wrap without breaking words."

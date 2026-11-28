@@ -19,3 +19,8 @@ occurrences:
     severity: nit
     description: "First verdict comment claimed the head was reviewed when code-review ran on the previous commit; merge-pr.ts refused and I posted a correction."
     solution: "After a follow-up commit, write Reviewed: <reviewed sha> and Own-read: <head> from the start."
+  - session: session_013zxzeQivG2v72EMRPiQ5aR
+    date: "2026-11-27"
+    severity: nit
+    description: "Read the PR verdict doc and ran verdict-line twice; its Own-read output names the reviewed sha, not the head, so I wrote the follow-up verdict lines by hand."
+    solution: "verdict-line should accept a separate head for Own-read."
